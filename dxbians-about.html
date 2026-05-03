@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About — Dxbians</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Bebas+Neue&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root { --gold: #f59e0b; --gold-light: #fcd34d; --gold-dark: #d97706; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Roboto', sans-serif; background: #000; color: #fff; overflow-x: hidden; }
+
+        /* HEADER */
+        .site-header { position: sticky; top: 0; z-index: 200; background: rgba(0,0,0,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 14px 0; }
+        .header-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
+        .header-nav { display: flex; align-items: center; gap: 4px; }
+        .header-nav a { color: rgba(255,255,255,0.6); text-decoration: none; padding: 7px 14px; border-radius: 8px; font-size: 0.875rem; font-weight: 500; transition: all 0.2s; }
+        .header-nav a:hover { color: #fff; background: rgba(255,255,255,0.08); }
+        .header-nav a.active { color: #fff; }
+        .logo-frame { display: inline-block; padding: 7px 14px; background: #fff; border-radius: 8px; text-decoration: none; transition: transform 0.2s; }
+        .logo-frame:hover { transform: scale(1.03); }
+        .logo-text { font-family: 'Press Start 2P', cursive; font-size: 16px; color: #000; line-height: 1; display: block; }
+        .coming-soon-pill { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.3); padding: 7px 14px; border-radius: 8px; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.05em; }
+
+        /* FOOTER */
+        .site-footer { background: #000; border-top: 1px solid #111; padding: 28px 0; }
+        .footer-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+        .footer-link { color: rgba(255,255,255,0.35); text-decoration: none; font-size: 0.8rem; transition: color 0.2s; }
+        .footer-link:hover { color: #fff; }
+        .footer-socials { display: flex; gap: 12px; align-items: center; }
+        .footer-social { color: rgba(255,255,255,0.35); text-decoration: none; font-size: 0.8rem; transition: color 0.2s; }
+        .footer-social:hover { color: var(--gold); }
+
+        /* HERO */
+        .about-hero { position: relative; min-height: 70vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 24px 60px; text-align: center; overflow: hidden; }
+        .hero-grid-bg { position: absolute; inset: 0; opacity: 0.04; background-image: linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px); background-size: 35px 35px; }
+        .hero-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 24px; }
+        .hero-headline { font-family: 'Bebas Neue', cursive; font-size: clamp(64px, 12vw, 140px); line-height: 0.9; margin-bottom: 24px; }
+        .hero-headline span { display: block; }
+        .hero-headline .white { color: #fff; }
+        .hero-headline .gold { color: var(--gold); text-shadow: 0 0 60px rgba(245,158,11,0.4); }
+        .hero-sub { font-size: clamp(15px, 2vw, 18px); color: #666; max-width: 560px; line-height: 1.7; }
+
+        /* SECTIONS */
+        .section { padding: 80px 24px; max-width: 1200px; margin: 0 auto; }
+        .section-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+        .section-title { font-family: 'Bebas Neue', cursive; font-size: clamp(36px, 6vw, 64px); line-height: 1; margin-bottom: 20px; color: #fff; }
+        .section-body { font-size: 1rem; color: #555; line-height: 1.8; max-width: 620px; }
+
+        /* DIVIDER */
+        .section-divider { height: 1px; background: linear-gradient(90deg, transparent, #1a1a1a, transparent); margin: 0 24px; }
+
+        /* CONCEPT GRID */
+        .concept-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-top: 50px; }
+        .concept-cell { background: #0a0a0a; padding: 40px; border: 1px solid #111; transition: border-color 0.3s; }
+        .concept-cell:hover { border-color: #222; }
+        .concept-number { font-family: 'Bebas Neue', cursive; font-size: 64px; color: #1a1a1a; line-height: 1; margin-bottom: 12px; }
+        .concept-title { font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 8px; }
+        .concept-desc { font-size: 0.875rem; color: #555; line-height: 1.7; }
+
+        /* HOW IT WORKS */
+        .steps-row { display: flex; flex-direction: column; gap: 0; margin-top: 50px; }
+        .step-item { display: flex; gap: 30px; align-items: flex-start; padding: 30px 0; border-bottom: 1px solid #0f0f0f; }
+        .step-item:last-child { border-bottom: none; }
+        .step-num { font-family: 'Press Start 2P', cursive; font-size: 10px; color: var(--gold); width: 36px; height: 36px; border: 1px solid #222; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 4px; }
+        .step-content { flex: 1; }
+        .step-title { font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 6px; }
+        .step-desc { font-size: 0.875rem; color: #555; line-height: 1.7; }
+
+        /* RARITY */
+        .rarity-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 50px; }
+        .rarity-card { background: #0a0a0a; border-radius: 16px; padding: 28px 20px; border: 1px solid #111; text-align: center; transition: all 0.3s; }
+        .rarity-card:hover { transform: translateY(-4px); }
+        .rarity-card.simple:hover { border-color: #333; }
+        .rarity-card.rare:hover { border-color: #4c1d95; box-shadow: 0 8px 30px rgba(139,92,246,0.2); }
+        .rarity-card.epic:hover { border-color: #7c3aed; box-shadow: 0 8px 30px rgba(139,92,246,0.3); }
+        .rarity-card.legendary:hover { border-color: var(--gold-dark); box-shadow: 0 8px 30px rgba(245,158,11,0.3); }
+        .rarity-mini { width: 70px; height: 70px; display: grid; grid-template-columns: repeat(7,1fr); grid-template-rows: repeat(7,1fr); margin: 0 auto 16px; border: 1px solid #1a1a1a; }
+        .rarity-mini-cell { border: 0.5px solid #111; }
+        .rarity-mini-cell.on { background: #fff; }
+        .rarity-mini-cell.on.gold { background: var(--gold); }
+        .rarity-name { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 6px; }
+        .rarity-name.simple { color: #555; }
+        .rarity-name.rare { color: #a78bfa; }
+        .rarity-name.epic { color: #c4b5fd; }
+        .rarity-name.legendary { color: var(--gold); }
+        .rarity-pct { font-family: 'Bebas Neue', cursive; font-size: 32px; margin-bottom: 4px; }
+        .rarity-desc { font-size: 0.75rem; color: #444; line-height: 1.5; }
+
+        /* FOUNDER BANNER */
+        .founder-banner { background: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 20px; padding: 50px 40px; margin-top: 50px; display: flex; gap: 40px; align-items: center; justify-content: space-between; flex-wrap: wrap; position: relative; overflow: hidden; }
+        .founder-banner::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at top right, rgba(245,158,11,0.06) 0%, transparent 60%); pointer-events: none; }
+        .founder-tag-big { font-family: 'Bebas Neue', cursive; font-size: 80px; color: #111; position: absolute; right: 40px; bottom: -10px; line-height: 1; }
+        .founder-price { font-family: 'Bebas Neue', cursive; font-size: 72px; color: var(--gold); line-height: 1; }
+        .founder-aed { font-family: 'Bebas Neue', cursive; font-size: 28px; color: #444; }
+        .founder-perks { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+        .founder-perk { display: flex; align-items: center; gap: 10px; font-size: 0.875rem; color: #888; }
+        .founder-perk-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+        .founder-cta { background: var(--gold); color: #000; padding: 14px 28px; border-radius: 10px; font-weight: 700; font-size: 0.95rem; text-decoration: none; transition: all 0.2s; white-space: nowrap; }
+        .founder-cta:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+        /* MAKERS SECTION */
+        .makers-row { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-top: 50px; }
+        .maker-feature { background: #0a0a0a; border: 1px solid #111; padding: 40px; }
+        .maker-feature-icon { font-size: 28px; margin-bottom: 16px; }
+        .maker-feature-title { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 8px; }
+        .maker-feature-desc { font-size: 0.875rem; color: #555; line-height: 1.7; }
+
+        /* VISION */
+        .vision-section { background: #050505; border-top: 1px solid #0f0f0f; border-bottom: 1px solid #0f0f0f; padding: 100px 24px; text-align: center; }
+        .vision-quote { font-family: 'Bebas Neue', cursive; font-size: clamp(32px, 6vw, 72px); line-height: 1.1; max-width: 900px; margin: 0 auto 30px; color: #fff; }
+        .vision-quote .gold { color: var(--gold); }
+        .vision-by { font-size: 0.8rem; color: #333; letter-spacing: 0.1em; }
+
+        @media (max-width: 768px) {
+            .concept-grid { grid-template-columns: 1fr; }
+            .rarity-grid { grid-template-columns: repeat(2, 1fr); }
+            .makers-row { grid-template-columns: 1fr; }
+            .founder-banner { padding: 35px 25px; }
+            .founder-tag-big { display: none; }
+        }
+        @media (max-width: 480px) {
+            .rarity-grid { grid-template-columns: 1fr 1fr; }
+            .hide-mobile { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+    <div class="header-inner">
+        <nav class="header-nav">
+            <a href="https://dxbians.com/about" class="active">About</a>
+            <a href="https://dxbians.com/patterns" class="hide-mobile">Patterns</a>
+        </nav>
+        <a href="https://dxbians.com" class="logo-frame"><span class="logo-text">Dxbians</span></a>
+        <nav class="header-nav">
+            <a href="https://dxbians.com/market" class="hide-mobile">Market</a>
+            <span class="coming-soon-pill hide-mobile">Login — Coming Soon</span>
+        </nav>
+    </div>
+</header>
+
+<!-- HERO -->
+<section class="about-hero">
+    <div class="hero-grid-bg"></div>
+    <div class="hero-label">About Dxbians</div>
+    <h1 class="hero-headline">
+        <span class="white">Your Pattern.</span>
+        <span class="gold">Your Brand.</span>
+        <span class="white">Forever.</span>
+    </h1>
+    <p class="hero-sub">Dxbians is replacing the branded fashion market by giving every person a unique, mathematically generated icon they own — printed on the items they wear.</p>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- THE CONCEPT -->
+<div class="section">
+    <div class="section-label">The Concept</div>
+    <h2 class="section-title">Why Wear Someone<br>Else's Brand?</h2>
+    <p class="section-body">For decades, people have paid to advertise Nike, Gucci, Supreme — corporations whose logos mean nothing about who you are. Dxbians flips this. Every person gets a unique pattern that is mathematically theirs. No two are alike. It becomes their signature, worn on clothing, accessories, and anything they choose.</p>
+
+    <div class="concept-grid">
+        <div class="concept-cell">
+            <div class="concept-number">01</div>
+            <div class="concept-title">Mathematically Unique</div>
+            <div class="concept-desc">Every pattern is generated from a 7×7 grid of black and white cells. The number of possible combinations is astronomically large — your pattern is provably one of a kind.</div>
+        </div>
+        <div class="concept-cell">
+            <div class="concept-number">02</div>
+            <div class="concept-title">Permanently Owned</div>
+            <div class="concept-desc">Once you claim your pattern, it is registered to you. No one else can claim it. It lives in our database permanently linked to your name.</div>
+        </div>
+        <div class="concept-cell">
+            <div class="concept-number">03</div>
+            <div class="concept-title">Worn on Everything</div>
+            <div class="concept-desc">Connect with local Dubai makers who print, embroider, and craft your pattern onto t-shirts, hoodies, bags, caps, and more.</div>
+        </div>
+        <div class="concept-cell">
+            <div class="concept-number">04</div>
+            <div class="concept-title">Has Real Value</div>
+            <div class="concept-desc">Rarity tiers, limited supply, and resale rights mean your pattern can grow in value. Founder patterns carry a permanent status tag that transfers on every sale.</div>
+        </div>
+    </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- HOW IT WORKS -->
+<div class="section">
+    <div class="section-label">How It Works</div>
+    <h2 class="section-title">Four Steps to<br>Your Icon</h2>
+    <div class="steps-row">
+        <div class="step-item">
+            <div class="step-num">1</div>
+            <div class="step-content">
+                <div class="step-title">Generate Your Pattern</div>
+                <div class="step-desc">Visit the Patterns page and generate a unique grid pattern. Choose a rarity tier — Simple, Rare, Epic, or Legendary. You can also hand-craft your own by clicking individual cells.</div>
+            </div>
+        </div>
+        <div class="step-item">
+            <div class="step-num">2</div>
+            <div class="step-content">
+                <div class="step-title">Claim It</div>
+                <div class="step-desc">Once you find a pattern you love, claim it. It gets a unique Pattern ID and is permanently registered to your name. No one else can ever own that pattern again.</div>
+            </div>
+        </div>
+        <div class="step-item">
+            <div class="step-num">3</div>
+            <div class="step-content">
+                <div class="step-title">Connect with Local Makers</div>
+                <div class="step-desc">Browse verified Dubai craftsmen and makers on our marketplace. Each maker owns their own Dxbians pattern — it's their brand. Pick the one who makes what you want.</div>
+            </div>
+        </div>
+        <div class="step-item">
+            <div class="step-num">4</div>
+            <div class="step-content">
+                <div class="step-title">Wear Your Identity</div>
+                <div class="step-desc">Your pattern gets printed, embroidered, or crafted onto the items of your choice. You walk out wearing something no one else in the world is wearing.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- RARITY -->
+<div class="section">
+    <div class="section-label">Rarity System</div>
+    <h2 class="section-title">Four Tiers.<br>One You.</h2>
+    <p class="section-body">Not all patterns are equal. The rarity system is based on real mathematical properties — symmetry, complexity, entropy, and density. The rarer the pattern, the more unique its structure.</p>
+    <div class="rarity-grid" id="rarity-grid-display"></div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- FOUNDER BUNDLE -->
+<div class="section">
+    <div class="section-label">Limited Offer</div>
+    <h2 class="section-title">The Founder Bundle</h2>
+    <div class="founder-banner">
+        <div>
+            <div class="founder-aed">AED</div>
+            <div class="founder-price">777</div>
+            <div style="font-size:0.75rem;color:#444;margin-top:4px;">One-time · First 1,000 only</div>
+        </div>
+        <div class="founder-perks">
+            <div class="founder-perk"><div class="founder-perk-dot"></div>1 Simple + 1 Rare + 1 Epic + 1 Legendary pattern</div>
+            <div class="founder-perk"><div class="founder-perk-dot"></div>388 AED maker credit — split across any Dubai makers</div>
+            <div class="founder-perk"><div class="founder-perk-dot" style="background:#a78bfa;"></div>⬡ FOUNDER tag on all 4 patterns — transfers on resale</div>
+            <div class="founder-perk"><div class="founder-perk-dot" style="background:#60a5fa;"></div>Market resale rights on all 4 patterns</div>
+        </div>
+        <a href="https://dxbians.com/demolanding" class="founder-cta">Claim Bundle →</a>
+        <div class="founder-tag-big">FOUNDER</div>
+    </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- LOCAL MAKERS -->
+<div class="section">
+    <div class="section-label">Local Makers</div>
+    <h2 class="section-title">Made in Dubai.<br>Made for You.</h2>
+    <p class="section-body">Every maker on Dxbians is a verified Dubai craftsman who owns their own pattern. Their pattern is their brand. You pick the maker, they bring your pattern to life.</p>
+    <div class="makers-row">
+        <div class="maker-feature">
+            <div class="maker-feature-icon">👕</div>
+            <div class="maker-feature-title">What They Make</div>
+            <div class="maker-feature-desc">T-shirts, hoodies, caps, bags, accessories, embroidery, custom items — if it can carry a pattern, a Dxbians maker can make it.</div>
+        </div>
+        <div class="maker-feature">
+            <div class="maker-feature-icon">⬡</div>
+            <div class="maker-feature-title">Their Pattern is Their Brand</div>
+            <div class="maker-feature-desc">Makers are onboarded with a promotional pattern. It becomes their maker identity — displayed on their profile and carried on everything they produce.</div>
+        </div>
+        <div class="maker-feature">
+            <div class="maker-feature-icon">📍</div>
+            <div class="maker-feature-title">Dubai First, Then Everywhere</div>
+            <div class="maker-feature-desc">We're starting with the best makers in Dubai. As Dxbians grows globally, local maker networks will expand city by city.</div>
+        </div>
+        <div class="maker-feature">
+            <div class="maker-feature-icon">💚</div>
+            <div class="maker-feature-title">Supporting Local Economy</div>
+            <div class="maker-feature-desc">Every order placed through Dxbians goes directly to a real craftsman in your city. The platform takes a small cut — the rest goes to the maker.</div>
+        </div>
+    </div>
+</div>
+
+<!-- VISION -->
+<div class="vision-section">
+    <div class="vision-quote">
+        "Every individual deserves what only corporations and celebrities have had —
+        <span class="gold">a signature mark.</span>"
+    </div>
+    <div class="vision-by">HARIB ALSHIHI FOR INNOVATION & AI RESEARCH & CONSULTANCIES · DUBAI, UAE · LICENSE 1366538</div>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div style="display:flex;gap:20px;flex-wrap:wrap;">
+            <a href="https://dxbians.com/termsandconditions" class="footer-link">Terms & Conditions</a>
+            <a href="https://dxbians.com/contact" class="footer-link">Contact</a>
+        </div>
+        <a href="https://dxbians.com" class="logo-frame" style="padding:5px 12px;"><span class="logo-text" style="font-size:12px;">Dxbians</span></a>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;">
+            <a href="https://instagram.com/dxbians" target="_blank" class="footer-link">Instagram</a>
+            <a href="https://youtube.com/@dxbians" target="_blank" class="footer-link">YouTube</a>
+            <a href="https://t.me/dxbians" target="_blank" class="footer-link">Telegram</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+// Animated rarity grid display
+const GRID_SIZE = 7;
+const rarities = [
+    { name: 'Simple', cls: 'simple', pct: '80%', desc: 'Basic symmetry\nMore accessible', pattern: [[0,0,0,1,0,0,0],[0,0,1,1,1,0,0],[0,1,1,1,1,1,0],[1,1,1,1,1,1,1],[0,1,1,1,1,1,0],[0,0,1,1,1,0,0],[0,0,0,1,0,0,0]] },
+    { name: 'Rare', cls: 'rare', pct: '15%', desc: 'Balanced symmetry\nModerate complexity', pattern: [[1,0,1,0,1,0,1],[0,1,0,1,0,1,0],[1,0,1,0,1,0,1],[0,1,0,1,0,1,0],[1,0,1,0,1,0,1],[0,1,0,1,0,1,0],[1,0,1,0,1,0,1]] },
+    { name: 'Epic', cls: 'epic', pct: '5%', desc: 'Complex symmetry\nIntricate structure', pattern: [[1,1,0,1,0,1,1],[1,0,1,0,1,0,1],[0,1,0,1,0,1,0],[1,0,1,1,1,0,1],[0,1,0,1,0,1,0],[1,0,1,0,1,0,1],[1,1,0,1,0,1,1]] },
+    { name: 'Legendary', cls: 'legendary', pct: '<1%', desc: 'Unique mathematical\nproperties', isGold: true, pattern: [[0,1,1,1,1,1,0],[1,1,0,1,0,1,1],[1,0,1,1,1,0,1],[1,1,1,1,1,1,1],[1,0,1,1,1,0,1],[1,1,0,1,0,1,1],[0,1,1,1,1,1,0]] }
+];
+
+function buildRarityGrid() {
+    const container = document.getElementById('rarity-grid-display');
+    rarities.forEach(r => {
+        const card = document.createElement('div');
+        card.className = `rarity-card ${r.cls}`;
+        const miniGrid = document.createElement('div');
+        miniGrid.className = 'rarity-mini';
+        r.pattern.forEach(row => row.forEach(cell => {
+            const c = document.createElement('div');
+            c.className = `rarity-mini-cell${cell ? ` on${r.isGold ? ' gold' : ''}` : ''}`;
+            miniGrid.appendChild(c);
+        }));
+        card.innerHTML = `
+            <div class="rarity-name ${r.cls}">${r.name}</div>
+            <div class="rarity-pct" style="color:${r.cls==='legendary'?'var(--gold)':r.cls==='rare'||r.cls==='epic'?'#a78bfa':'#555'}">${r.pct}</div>
+            <div class="rarity-desc">${r.desc}</div>
+        `;
+        card.insertBefore(miniGrid, card.firstChild);
+        container.appendChild(card);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', buildRarityGrid);
+</script>
+</body>
+</html>

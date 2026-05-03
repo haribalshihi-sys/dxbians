@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market — Dxbians</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Bebas+Neue&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root { --gold: #f59e0b; --gold-light: #fcd34d; --gold-dark: #d97706; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Roboto', sans-serif; background: #000; color: #fff; overflow-x: hidden; min-height: 100vh; display: flex; flex-direction: column; }
+
+        .site-header { position: sticky; top: 0; z-index: 200; background: rgba(0,0,0,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 14px 0; }
+        .header-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
+        .header-nav { display: flex; align-items: center; gap: 4px; }
+        .header-nav a { color: rgba(255,255,255,0.6); text-decoration: none; padding: 7px 14px; border-radius: 8px; font-size: 0.875rem; font-weight: 500; transition: all 0.2s; }
+        .header-nav a:hover { color: #fff; background: rgba(255,255,255,0.08); }
+        .header-nav a.active { color: #fff; }
+        .logo-frame { display: inline-block; padding: 7px 14px; background: #fff; border-radius: 8px; text-decoration: none; transition: transform 0.2s; }
+        .logo-frame:hover { transform: scale(1.03); }
+        .logo-text { font-family: 'Press Start 2P', cursive; font-size: 16px; color: #000; line-height: 1; display: block; }
+        .coming-soon-pill { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.3); padding: 7px 14px; border-radius: 8px; font-size: 0.75rem; font-weight: 500; }
+
+        .site-footer { background: #000; border-top: 1px solid #111; padding: 28px 0; margin-top: auto; }
+        .footer-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+        .footer-link { color: rgba(255,255,255,0.35); text-decoration: none; font-size: 0.8rem; transition: color 0.2s; }
+        .footer-link:hover { color: #fff; }
+
+        /* MAIN */
+        .market-main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 24px; text-align: center; position: relative; overflow: hidden; }
+
+        /* Grid BG */
+        .grid-bg { position: absolute; inset: 0; opacity: 0.04; background-image: linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px); background-size: 35px 35px; animation: grid-drift 25s linear infinite; }
+        @keyframes grid-drift { 0% { background-position: 0 0; } 100% { background-position: 35px 35px; } }
+
+        /* Ghost products */
+        .ghost-products { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 60px; }
+        .ghost-card { width: 180px; background: #0a0a0a; border: 1px solid #111; border-radius: 12px; padding: 20px; opacity: 0.4; filter: blur(1px); transition: all 0.3s; }
+        .ghost-card:hover { opacity: 0.6; filter: blur(0); }
+        .ghost-img { width: 100%; height: 120px; background: #111; border-radius: 8px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; }
+        .ghost-pattern { width: 56px; height: 56px; display: grid; grid-template-columns: repeat(7,1fr); grid-template-rows: repeat(7,1fr); }
+        .ghost-cell { border: 0.5px solid #1a1a1a; }
+        .ghost-cell.on { background: #333; }
+        .ghost-label { height: 10px; background: #1a1a1a; border-radius: 3px; margin-bottom: 6px; }
+        .ghost-label.short { width: 60%; }
+        .ghost-price { height: 14px; background: #222; border-radius: 3px; width: 40%; }
+
+        /* Main content */
+        .market-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2); color: var(--gold); padding: 8px 20px; border-radius: 100px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 28px; }
+        .pulse { width: 7px; height: 7px; background: var(--gold); border-radius: 50%; animation: pulse 1.5s ease-in-out infinite; }
+        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.8)} }
+
+        .market-title { font-family: 'Bebas Neue', cursive; font-size: clamp(56px, 12vw, 120px); line-height: 0.9; margin-bottom: 20px; }
+        .market-title .white { color: #fff; display: block; }
+        .market-title .gold { color: var(--gold); display: block; text-shadow: 0 0 40px rgba(245,158,11,0.3); }
+
+        .market-desc { font-size: clamp(14px, 2vw, 17px); color: #555; max-width: 520px; line-height: 1.7; margin-bottom: 50px; }
+
+        /* What's coming */
+        .coming-items { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2px; max-width: 800px; width: 100%; margin-bottom: 50px; text-align: left; }
+        .coming-item { background: #0a0a0a; border: 1px solid #111; padding: 24px; }
+        .coming-item-icon { font-size: 24px; margin-bottom: 12px; }
+        .coming-item-title { font-size: 0.875rem; font-weight: 700; color: #fff; margin-bottom: 6px; }
+        .coming-item-desc { font-size: 0.775rem; color: #444; line-height: 1.6; }
+
+        /* Notify form */
+        .notify-form { display: flex; gap: 8px; max-width: 420px; width: 100%; flex-wrap: wrap; justify-content: center; }
+        .notify-input { flex: 1; min-width: 200px; background: #0a0a0a; border: 1px solid #222; color: #fff; padding: 12px 16px; border-radius: 10px; font-size: 0.875rem; transition: border-color 0.2s; }
+        .notify-input:focus { outline: none; border-color: var(--gold); }
+        .notify-input::placeholder { color: #333; }
+        .notify-btn { background: var(--gold); color: #000; border: none; padding: 12px 24px; border-radius: 10px; font-weight: 700; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+        .notify-btn:hover { background: var(--gold-light); transform: translateY(-1px); }
+        .notify-success { color: #4ade80; font-size: 0.8rem; margin-top: 10px; display: none; }
+
+        @media (max-width: 640px) { .ghost-card { width: 140px; } .hide-mobile { display: none; } }
+    </style>
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-inner">
+        <nav class="header-nav">
+            <a href="https://dxbians.com/about">About</a>
+            <a href="https://dxbians.com/patterns" class="hide-mobile">Patterns</a>
+        </nav>
+        <a href="https://dxbians.com" class="logo-frame"><span class="logo-text">Dxbians</span></a>
+        <nav class="header-nav">
+            <a href="https://dxbians.com/market" class="active hide-mobile">Market</a>
+            <span class="coming-soon-pill hide-mobile">Login — Coming Soon</span>
+        </nav>
+    </div>
+</header>
+
+<main class="market-main">
+    <div class="grid-bg"></div>
+
+    <!-- Ghost product cards in background -->
+    <div class="ghost-products">
+        <div class="ghost-card">
+            <div class="ghost-img"><div class="ghost-pattern" id="ghost1"></div></div>
+            <div class="ghost-label"></div>
+            <div class="ghost-label short"></div>
+            <div class="ghost-price"></div>
+        </div>
+        <div class="ghost-card" style="transform:translateY(20px)">
+            <div class="ghost-img"><div class="ghost-pattern" id="ghost2"></div></div>
+            <div class="ghost-label"></div>
+            <div class="ghost-label short"></div>
+            <div class="ghost-price"></div>
+        </div>
+        <div class="ghost-card">
+            <div class="ghost-img"><div class="ghost-pattern" id="ghost3"></div></div>
+            <div class="ghost-label"></div>
+            <div class="ghost-label short"></div>
+            <div class="ghost-price"></div>
+        </div>
+        <div class="ghost-card" style="transform:translateY(-10px)">
+            <div class="ghost-img"><div class="ghost-pattern" id="ghost4"></div></div>
+            <div class="ghost-label"></div>
+            <div class="ghost-label short"></div>
+            <div class="ghost-price"></div>
+        </div>
+        <div class="ghost-card" style="transform:translateY(15px)">
+            <div class="ghost-img"><div class="ghost-pattern" id="ghost5"></div></div>
+            <div class="ghost-label"></div>
+            <div class="ghost-label short"></div>
+            <div class="ghost-price"></div>
+        </div>
+    </div>
+
+    <div class="market-badge">
+        <div class="pulse"></div>
+        Coming Soon
+    </div>
+
+    <h1 class="market-title">
+        <span class="white">The Dxbians</span>
+        <span class="gold">Market</span>
+    </h1>
+
+    <p class="market-desc">The marketplace for Dxbians merchandise, claimed pattern resales, and maker-crafted items is being built. Be the first to know when it opens.</p>
+
+    <!-- What's coming -->
+    <div class="coming-items">
+        <div class="coming-item">
+            <div class="coming-item-icon">👕</div>
+            <div class="coming-item-title">Dxbians Merchandise</div>
+            <div class="coming-item-desc">Official Dxbians branded apparel and accessories.</div>
+        </div>
+        <div class="coming-item">
+            <div class="coming-item-icon">⬡</div>
+            <div class="coming-item-title">Pattern Resales</div>
+            <div class="coming-item-desc">Buy and sell claimed patterns. Founder patterns carry their status forever.</div>
+        </div>
+        <div class="coming-item">
+            <div class="coming-item-icon">🧵</div>
+            <div class="coming-item-title">Maker Listings</div>
+            <div class="coming-item-desc">Order custom items from verified Dubai makers directly through the platform.</div>
+        </div>
+        <div class="coming-item">
+            <div class="coming-item-icon">💚</div>
+            <div class="coming-item-title">Maker Credit</div>
+            <div class="coming-item-desc">Redeem your Founder Bundle credit on any maker order.</div>
+        </div>
+    </div>
+
+    <!-- Notify -->
+    <p style="font-size:0.8rem;color:#333;margin-bottom:14px;letter-spacing:0.05em;">GET NOTIFIED WHEN WE LAUNCH</p>
+    <div class="notify-form">
+        <input type="email" id="notify-email" class="notify-input" placeholder="your@email.com">
+        <button class="notify-btn" onclick="notifyMe()">Notify Me</button>
+    </div>
+    <p class="notify-success" id="notify-success">✓ You're on the list. We'll reach out when the Market launches.</p>
+</main>
+
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div style="display:flex;gap:20px;flex-wrap:wrap;">
+            <a href="https://dxbians.com/termsandconditions" class="footer-link">Terms & Conditions</a>
+            <a href="https://dxbians.com/contact" class="footer-link">Contact</a>
+        </div>
+        <a href="https://dxbians.com" class="logo-frame" style="padding:5px 12px;"><span class="logo-text" style="font-size:12px;">Dxbians</span></a>
+        <div style="display:flex;gap:16px;">
+            <a href="https://instagram.com/dxbians" target="_blank" class="footer-link">Instagram</a>
+            <a href="https://youtube.com/@dxbians" target="_blank" class="footer-link">YouTube</a>
+            <a href="https://t.me/dxbians" target="_blank" class="footer-link">Telegram</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+function randomPattern() {
+    return Array(49).fill(0).map(() => Math.random() > 0.5 ? 1 : 0);
+}
+function renderGhost(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = randomPattern().map(c => `<div class="ghost-cell${c?' on':''}"></div>`).join('');
+}
+['ghost1','ghost2','ghost3','ghost4','ghost5'].forEach(renderGhost);
+
+function notifyMe() {
+    const email = document.getElementById('notify-email').value.trim();
+    if (!email || !email.includes('@')) { alert('Please enter a valid email.'); return; }
+    // Store in localStorage as simple waitlist (can be connected to Supabase later)
+    try {
+        const list = JSON.parse(localStorage.getItem('dxbians_waitlist') || '[]');
+        if (!list.includes(email)) { list.push(email); localStorage.setItem('dxbians_waitlist', JSON.stringify(list)); }
+    } catch(e) {}
+    document.getElementById('notify-email').value = '';
+    document.getElementById('notify-success').style.display = 'block';
+}
+</script>
+</body>
+</html>

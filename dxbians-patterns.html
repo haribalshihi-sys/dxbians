@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dxbians Pattern Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Roboto', sans-serif; background-color: #f8f9fa; color: #333; margin: 0; padding: 0; }
+        .header { background-color: #000000; box-shadow: 0 2px 10px rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 100; padding: 15px 0; }
+        .logo { font-size: 24px; font-weight: 700; letter-spacing: 1px; color: #000; font-family: 'Press Start 2P', cursive; }
+        .logo-frame { display: inline-block; padding: 8px 16px; background-color: white; border-radius: 8px; position: relative; text-decoration: none; }
+        .nav-link { color: #fff; padding: 8px 16px; border-radius: 8px; font-weight: 500; transition: all 0.3s; text-decoration: none; }
+        .nav-link:hover { background-color: rgba(255,255,255,0.1); }
+        .login-btn { background-color: transparent; color: #fff; border: 2px solid #fff; padding: 8px 16px; border-radius: 8px; font-weight: 500; transition: all 0.3s; text-decoration: none; display: inline-block; }
+        .login-btn:hover { background-color: #fff; color: #000; }
+        .pattern-container { width: 245px; height: 245px; background-color: white; border: 1px solid #ddd; margin: 0 auto; display: flex; justify-content: center; align-items: center; }
+        .grid-cell { width: 35px; height: 35px; border: 1px solid #ddd; background-color: white; transition: background-color 0.2s; cursor: pointer; }
+        .grid-cell.active { background-color: #000; }
+        #pattern-grid { display: grid; grid-template-columns: repeat(7, 35px); grid-template-rows: repeat(7, 35px); gap: 0; margin: 0 auto; }
+        .generate-btn { background-color: #000; color: white; padding: 12px 24px; border-radius: 8px; font-weight: 500; transition: all 0.3s; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; max-width: 300px; margin: 20px auto; position: relative; z-index: 1; overflow: hidden; }
+        .generate-btn:hover { background-color: #333; transform: translateY(-2px); }
+        .generate-btn::before { content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; z-index: -1; background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000); background-size: 400%; border-radius: 10px; animation: glowing 20s linear infinite; opacity: 0; transition: opacity 0.3s ease-in-out; }
+        .generate-btn:hover::before { opacity: 1; }
+        .clear-btn { background-color: #6b7280; color: white; padding: 12px 24px; border-radius: 8px; font-weight: 500; transition: all 0.3s; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; max-width: 300px; margin: 10px auto 20px; }
+        .clear-btn:hover { background-color: #4b5563; transform: translateY(-2px); }
+        .btn-claim { background-color: #000; color: white; padding: 12px 24px; border-radius: 8px; font-weight: 500; transition: all 0.3s; font-size: 1.1rem; position: relative; z-index: 1; overflow: hidden; width: 100%; max-width: 300px; margin: 0 auto 20px; }
+        .btn-claim:hover { background-color: #333; transform: translateY(-2px); }
+        .btn-claim::before { content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; z-index: -1; background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000); background-size: 400%; border-radius: 10px; animation: glowing 20s linear infinite; opacity: 0; transition: opacity 0.3s ease-in-out; }
+        .btn-claim:hover::before { opacity: 1; }
+        .btn-claim:disabled { background-color: #6b7280; cursor: not-allowed; transform: none; }
+        .btn-claim:disabled::before { opacity: 0; }
+        @keyframes glowing { 0% { background-position: 0 0; } 50% { background-position: 400% 0; } 100% { background-position: 0 0; } }
+        .rarity-toggle { padding: 8px 16px; border-radius: 20px; font-weight: 500; cursor: pointer; transition: all 0.3s; border: 2px solid transparent; margin: 0 5px; color: #4b5563; background-color: transparent; position: relative; }
+        .rarity-toggle:hover { transform: translateY(-2px); }
+        .rarity-toggle.active { border-color: #4b5563; }
+        .rarity-toggle[data-rarity="rare"].active { border-color: #8b5cf6; box-shadow: 0 0 10px rgba(139,92,246,0.5); }
+        .rarity-toggle[data-rarity="epic"].active { border-color: #8b5cf6; box-shadow: 0 0 10px rgba(139,92,246,0.5); animation: rainbow-border 3s infinite; }
+        .rarity-toggle[data-rarity="legendary"].active { border-color: #f59e0b; box-shadow: 0 0 10px rgba(245,158,11,0.5); animation: gold-glow 1.5s infinite alternate; }
+        @keyframes rainbow-border { 0% { border-color: #f44336; } 20% { border-color: #ff9800; } 40% { border-color: #ffeb3b; } 60% { border-color: #4caf50; } 80% { border-color: #2196f3; } 100% { border-color: #9c27b0; } }
+        @keyframes gold-glow { from { box-shadow: 0 0 5px #f59e0b, 0 0 10px #f59e0b; } to { box-shadow: 0 0 10px #f59e0b, 0 0 20px #f59e0b; } }
+        .rarity-simple { color: #4b5563; } .rarity-rare { color: #8b5cf6; } .rarity-epic { color: #8b5cf6; } .rarity-legendary { color: #f59e0b; }
+        .pattern-id-info { background-color: #f3f4f6; border-radius: 8px; padding: 15px; margin: 10px 0 20px; }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal { background-color: white; border-radius: 12px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); transform: translateY(-20px); transition: all 0.3s ease; }
+        .modal-overlay.active .modal { transform: translateY(0); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #e5e7eb; }
+        .modal-title { font-size: 1.5rem; font-weight: 600; color: #111827; }
+        .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #6b7280; transition: color 0.2s; }
+        .modal-close:hover { color: #111827; }
+        .pattern-preview { margin: 20px 0; padding: 15px; background-color: #f3f4f6; border-radius: 8px; text-align: center; display: flex; justify-content: center; align-items: center; }
+        .pattern-preview-container { width: 210px; height: 210px; background-color: white; border: 1px solid #ddd; display: flex; justify-content: center; align-items: center; }
+        .pattern-preview-grid { display: grid; grid-template-columns: repeat(7, 1fr); grid-template-rows: repeat(7, 1fr); gap: 0; width: 100%; height: 100%; }
+        .preview-cell { width: 100%; height: 100%; border: 1px solid #ddd; background-color: white; }
+        .preview-cell.active { background-color: #000; }
+        .price-info { display: flex; justify-content: space-between; margin: 20px 0; padding: 15px; background-color: #f3f4f6; border-radius: 8px; }
+        .price-item { text-align: center; }
+        .price-label { font-size: 0.875rem; color: #6b7280; }
+        .price-value { font-size: 1.25rem; font-weight: 600; color: #111827; }
+        .search-container { display: flex; gap: 10px; margin-top: 15px; }
+        .search-input { flex-grow: 1; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.875rem; }
+        .search-btn { background-color: #000; color: white; padding: 8px 16px; border-radius: 6px; font-size: 0.875rem; border: none; cursor: pointer; transition: all 0.2s; }
+        .search-btn:hover { background-color: #333; }
+        .search-result { margin-top: 10px; padding: 8px; border-radius: 6px; font-size: 0.875rem; display: none; }
+        .search-result.available { background-color: #d1fae5; color: #065f46; display: block; }
+        .search-result.unavailable { background-color: #fee2e2; color: #b91c1c; display: block; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .btn-loading { position: relative; color: transparent !important; }
+        .btn-loading::after { content: ''; position: absolute; left: calc(50% - 10px); top: calc(50% - 10px); width: 20px; height: 20px; border: 3px solid rgba(255,255,255,.3); border-radius: 50%; border-top-color: #fff; animation: spin 1s ease-in-out infinite; }
+        .footer { background-color: #000000; padding: 24px 0; color: #ffffff; border-top: 1px solid #111; }
+        .footer-link { color: rgba(255,255,255,0.35); text-decoration: none; font-size: 0.8rem; transition: color 0.2s; padding: 4px 0; }
+        .footer-link:hover { color: #fff; background: none; }
+        .contact-btn { background-color: transparent; color: #fff; border: 2px solid #fff; padding: 8px 16px; border-radius: 8px; font-weight: 500; transition: all 0.3s; text-decoration: none; display: inline-block; }
+        .contact-btn:hover { background-color: #fff; color: #000; }
+        .pattern-id-container { display: flex; align-items: center; background-color: #f3f4f6; border-radius: 8px; padding: 12px 15px; margin-bottom: 20px; }
+        .pattern-id-value { font-family: monospace; font-size: 1.1rem; font-weight: 600; flex-grow: 1; margin-right: 10px; }
+        .copy-btn { background-color: #e5e7eb; border: none; border-radius: 6px; padding: 8px 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        .copy-btn:hover { background-color: #d1d5db; }
+        .copy-icon { width: 18px; height: 18px; }
+        .copy-tooltip { position: absolute; background-color: #111827; color: white; padding: 5px 10px; border-radius: 4px; font-size: 0.75rem; bottom: 100%; left: 50%; transform: translateX(-50%) translateY(-5px); white-space: nowrap; opacity: 0; visibility: hidden; transition: all 0.2s; }
+        .copy-btn:hover .copy-tooltip { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(-10px); }
+        .rarity-badge { display: inline-block; padding: 5px 12px; border-radius: 20px; font-weight: 500; font-size: 0.9rem; margin-bottom: 15px; }
+        .rarity-badge.simple { background-color: #e5e7eb; color: #4b5563; }
+        .rarity-badge.rare { background-color: #ede9fe; color: #8b5cf6; border: 1px solid #c4b5fd; }
+        .rarity-badge.epic { background-color: #ede9fe; color: #8b5cf6; border: 1px solid #c4b5fd; animation: rainbow-bg 3s infinite; }
+        .rarity-badge.legendary { background-color: #fef3c7; color: #d97706; border: 1px solid #fcd34d; animation: gold-pulse 1.5s infinite alternate; }
+        @keyframes rainbow-bg { 0% { background-color: #fee2e2; border-color: #fca5a5; } 20% { background-color: #ffedd5; border-color: #fdba74; } 40% { background-color: #fef3c7; border-color: #fcd34d; } 60% { background-color: #d1fae5; border-color: #6ee7b7; } 80% { background-color: #dbeafe; border-color: #93c5fd; } 100% { background-color: #ede9fe; border-color: #c4b5fd; } }
+        @keyframes gold-pulse { from { background-color: #fef3c7; } to { background-color: #fde68a; } }
+        .payment-btn { background-color: #000; color: white; padding: 12px 24px; border-radius: 8px; font-weight: 500; transition: all 0.3s; font-size: 1.1rem; text-align: center; display: block; width: 100%; max-width: 300px; margin: 20px auto 10px; text-decoration: none; position: relative; z-index: 1; overflow: hidden; }
+        .payment-btn:hover { background-color: #333; transform: translateY(-2px); text-decoration: none; color: white; }
+        .payment-btn::before { content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; z-index: -1; background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000); background-size: 400%; border-radius: 10px; animation: glowing 20s linear infinite; opacity: 0; transition: opacity 0.3s ease-in-out; }
+        .payment-btn:hover::before { opacity: 1; }
+        .payment-btn.simple::before { background: linear-gradient(45deg, #9ca3af, #6b7280, #4b5563, #6b7280, #9ca3af); background-size: 400%; }
+        .payment-btn.rare::before { background: linear-gradient(45deg, #c4b5fd, #a78bfa, #8b5cf6, #a78bfa, #c4b5fd); background-size: 400%; }
+        .payment-btn.epic::before { background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000); background-size: 400%; }
+        .payment-btn.legendary::before { background: linear-gradient(45deg, #fcd34d, #f59e0b, #d97706, #f59e0b, #fcd34d); background-size: 400%; }
+        .notification { position: fixed; top: 20px; right: 20px; padding: 15px 25px; border-radius: 8px; background-color: #d1fae5; color: #065f46; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 2000; transform: translateX(150%); transition: transform 0.3s ease-out; display: flex; align-items: center; gap: 10px; }
+        .notification.error { background-color: #fee2e2; color: #b91c1c; }
+        .notification.show { transform: translateX(0); }
+        .notification-icon { width: 24px; height: 24px; fill: currentColor; }
+
+        /* ===== ADMIN PANEL ===== */
+        .admin-panel { position: fixed; bottom: 0; left: 0; right: 0; background: #111; color: white; z-index: 500; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 20px 20px 0 0; max-height: 85vh; overflow-y: auto; }
+        .admin-panel.open { transform: translateY(0); }
+        .admin-handle { width: 40px; height: 4px; background: #444; border-radius: 2px; margin: 12px auto 0; cursor: pointer; }
+        .admin-header { padding: 20px 30px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
+        .admin-title { font-family: 'Press Start 2P', cursive; font-size: 14px; color: #f59e0b; }
+        .admin-close { background: none; border: none; color: #888; font-size: 24px; cursor: pointer; }
+        .admin-close:hover { color: white; }
+        .admin-tabs { display: flex; border-bottom: 1px solid #333; }
+        .admin-tab { padding: 12px 20px; color: #888; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; font-size: 0.875rem; font-weight: 500; }
+        .admin-tab.active { color: #f59e0b; border-bottom-color: #f59e0b; }
+        .admin-tab-content { display: none; padding: 25px 30px; }
+        .admin-tab-content.active { display: block; }
+        .admin-input { width: 100%; background: #222; border: 1px solid #444; color: white; padding: 10px 14px; border-radius: 8px; font-size: 0.875rem; margin-bottom: 12px; }
+        .admin-input:focus { outline: none; border-color: #f59e0b; }
+        .admin-input::placeholder { color: #666; }
+        .admin-btn { background: #f59e0b; color: #000; padding: 10px 20px; border-radius: 8px; font-weight: 700; border: none; cursor: pointer; transition: all 0.2s; width: 100%; margin-top: 8px; }
+        .admin-btn:hover { background: #fbbf24; }
+        .admin-btn.danger { background: #ef4444; color: white; }
+        .admin-btn.danger:hover { background: #dc2626; }
+        .admin-btn.secondary { background: #333; color: white; }
+        .admin-btn.secondary:hover { background: #444; }
+        .admin-label { font-size: 0.75rem; color: #888; margin-bottom: 4px; display: block; text-transform: uppercase; letter-spacing: 0.05em; }
+        .admin-select { width: 100%; background: #222; border: 1px solid #444; color: white; padding: 10px 14px; border-radius: 8px; font-size: 0.875rem; margin-bottom: 12px; }
+        .admin-select:focus { outline: none; border-color: #f59e0b; }
+        .claimed-pattern-item { background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 12px 15px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .claimed-pattern-id { font-family: monospace; font-size: 0.875rem; color: #f59e0b; }
+        .claimed-pattern-meta { font-size: 0.75rem; color: #666; }
+        .unclaim-btn { background: #333; border: none; color: #ef4444; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 0.75rem; }
+        .unclaim-btn:hover { background: #ef4444; color: white; }
+        .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .admin-section-title { font-size: 0.875rem; font-weight: 600; color: #ccc; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 1px solid #333; }
+        .maker-item { background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 12px 15px; margin-bottom: 8px; }
+        .maker-name { font-weight: 600; color: white; }
+        .maker-pattern { font-family: monospace; font-size: 0.75rem; color: #f59e0b; }
+        .maker-status { font-size: 0.75rem; padding: 2px 8px; border-radius: 10px; }
+        .maker-status.active { background: #065f46; color: #d1fae5; }
+        .admin-trigger { position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px; background: #111; border-radius: 50%; border: 2px solid #f59e0b; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 400; transition: all 0.3s; }
+        .admin-trigger:hover { transform: scale(1.1); box-shadow: 0 0 20px rgba(245,158,11,0.4); }
+        .admin-trigger svg { width: 22px; height: 22px; fill: #f59e0b; }
+        .admin-login-screen { padding: 30px; text-align: center; }
+        .admin-login-title { font-family: 'Press Start 2P', cursive; font-size: 12px; color: #f59e0b; margin-bottom: 20px; }
+        .admin-logged-in { display: none; }
+
+        /* ===== MAKER MARKETPLACE ===== */
+        .marketplace-section { background: white; border-radius: 12px; padding: 30px; margin-top: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        .marketplace-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; }
+        .marketplace-subtitle { color: #6b7280; margin-bottom: 25px; font-size: 0.95rem; }
+        .maker-card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; transition: all 0.3s; cursor: pointer; position: relative; overflow: hidden; }
+        .maker-card:hover { border-color: #000; transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        .maker-card-pattern { width: 70px; height: 70px; border: 1px solid #ddd; flex-shrink: 0; }
+        .maker-card-pattern-grid { display: grid; grid-template-columns: repeat(7, 1fr); grid-template-rows: repeat(7, 1fr); width: 100%; height: 100%; }
+        .maker-card-cell { border: 0.5px solid #eee; }
+        .maker-card-cell.active { background-color: #000; }
+        .maker-rating { display: flex; align-items: center; gap: 4px; font-size: 0.875rem; color: #6b7280; }
+        .star { color: #f59e0b; }
+        .maker-products-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+        .product-tag { background: #f3f4f6; color: #4b5563; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; }
+        .contact-maker-btn { background: #000; color: white; border: none; padding: 8px 18px; border-radius: 8px; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; margin-top: 12px; width: 100%; }
+        .contact-maker-btn:hover { background: #333; }
+        .maker-verified { display: inline-flex; align-items: center; gap: 4px; background: #fef3c7; color: #92400e; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 600; }
+        .filter-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+        .filter-btn { padding: 6px 14px; border-radius: 20px; border: 1px solid #e5e7eb; background: white; color: #4b5563; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; }
+        .filter-btn.active { background: #000; color: white; border-color: #000; }
+        .makers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .empty-makers { text-align: center; padding: 40px; color: #9ca3af; }
+
+        /* Maker detail modal */
+        .maker-modal-pattern { width: 120px; height: 120px; border: 1px solid #ddd; margin: 0 auto 15px; }
+        .maker-modal-pattern-grid { display: grid; grid-template-columns: repeat(7, 1fr); grid-template-rows: repeat(7, 1fr); width: 100%; height: 100%; }
+        .maker-modal-cell { border: 0.5px solid #eee; }
+        .maker-modal-cell.active { background-color: #000; }
+        .whatsapp-btn { background: #25D366; color: white; padding: 12px 24px; border-radius: 8px; font-weight: 500; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 15px; transition: all 0.2s; }
+        .whatsapp-btn:hover { background: #128C7E; color: white; text-decoration: none; }
+
+        /* Stats bar */
+        .stats-bar { background: #000; color: white; padding: 10px 0; }
+        .stat-item { text-align: center; }
+        .stat-number { font-family: 'Press Start 2P', cursive; font-size: 14px; color: #f59e0b; }
+        .stat-label { font-size: 0.7rem; color: #888; margin-top: 4px; }
+    </style>
+</head>
+<body>
+
+<!-- Success/Error Notification -->
+<div id="success-notification" class="notification">
+    <svg class="notification-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+    </svg>
+    <span id="notification-text">Pattern claimed successfully!</span>
+</div>
+
+<!-- Header -->
+<header class="header">
+    <div class="container mx-auto px-4">
+        <div class="flex justify-between items-center">
+            <div class="w-1/3 flex justify-start items-center space-x-4">
+                <a href="https://dxbians.com/about" class="nav-link">About</a>
+                <a href="https://dxbians.com/patterns" class="nav-link" style="color:#fff;">Patterns</a>
+            </div>
+            <div class="w-1/3 flex justify-center">
+                <a href="https://dxbians.com" class="logo-frame" id="logo-link">
+                    <h1 class="logo">Dxbians</h1>
+                </a>
+            </div>
+            <div class="w-1/3 flex justify-end items-center gap-4">
+                <a href="https://dxbians.com/market" class="nav-link">Market</a>
+                <span style="background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.3);padding:8px 14px;border-radius:8px;font-size:0.75rem;font-weight:500;">Login — Coming Soon</span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Stats Bar -->
+<div class="stats-bar">
+    <div class="container mx-auto px-4">
+        <div class="flex justify-center gap-12">
+            <div class="stat-item">
+                <div class="stat-number" id="total-claimed">—</div>
+                <div class="stat-label">Patterns Claimed</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="total-makers">—</div>
+                <div class="stat-label">Local Makers</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">∞</div>
+                <div class="stat-label">Possible Patterns</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Pattern Generator Section -->
+<section class="py-12 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold mb-8 text-center">Create Your Pattern</h2>
+        <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-8">
+            <!-- Rarity Toggle -->
+            <div class="text-center mb-6">
+                <p class="text-gray-600 mb-2">Select Rarity Type:</p>
+                <div class="flex justify-center flex-wrap gap-2 mb-4">
+                    <button class="rarity-toggle active" data-rarity="simple">Simple</button>
+                    <button class="rarity-toggle" data-rarity="rare">Rare</button>
+                    <button class="rarity-toggle" data-rarity="epic">Epic</button>
+                    <button class="rarity-toggle" data-rarity="legendary">Legendary</button>
+                </div>
+            </div>
+            <!-- Buttons -->
+            <div class="flex flex-col justify-center items-center gap-4 mb-6">
+                <button id="generate-btn" class="generate-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                    Generate Pattern
+                </button>
+                <button id="clear-btn" class="clear-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                    Clear Grid
+                </button>
+            </div>
+            <!-- Grid -->
+            <div class="flex flex-col items-center">
+                <div class="bg-white p-5 rounded-lg shadow-md mb-6">
+                    <p class="text-center text-gray-600 mb-4">Or Create Your Own By Clicking Each Cell</p>
+                    <div class="pattern-container"><div id="pattern-grid"></div></div>
+                </div>
+                <button id="claim-btn" class="btn-claim" disabled>Claim This Pattern</button>
+                <div class="pattern-id-info w-full">
+                    <p class="text-lg font-medium">Pattern ID: <span id="pattern-id" class="font-bold">-</span></p>
+                    <p class="text-lg font-medium">Rarity: <span id="pattern-rarity" class="font-bold">-</span></p>
+                    <p id="rarity-description" class="text-gray-600 mt-2">Generate a pattern to see its rarity classification.</p>
+                    <div class="search-container">
+                        <input type="text" id="pattern-search" class="search-input" placeholder="Search pattern ID...">
+                        <button id="search-btn" class="search-btn">Check Availability</button>
+                    </div>
+                    <div id="search-result" class="search-result"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Maker Marketplace -->
+        <div class="max-w-3xl mx-auto marketplace-section" id="marketplace-section">
+            <h3 class="marketplace-title">🧵 Local Makers in Dubai</h3>
+            <p class="marketplace-subtitle">Connect with verified local craftsmen who can bring your pattern to life on clothing, accessories, and more.</p>
+            <div class="filter-bar" id="product-filters">
+                <button class="filter-btn active" data-filter="all">All Makers</button>
+                <button class="filter-btn" data-filter="t-shirts">T-Shirts</button>
+                <button class="filter-btn" data-filter="hoodies">Hoodies</button>
+                <button class="filter-btn" data-filter="accessories">Accessories</button>
+                <button class="filter-btn" data-filter="bags">Bags</button>
+                <button class="filter-btn" data-filter="caps">Caps</button>
+                <button class="filter-btn" data-filter="embroidery">Embroidery</button>
+            </div>
+            <div class="makers-grid" id="makers-grid">
+                <div class="empty-makers">
+                    <p class="text-lg font-medium mb-2">Makers coming soon</p>
+                    <p class="text-sm">Be the first maker to join Dxbians Dubai</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container mx-auto px-4">
+        <div class="flex justify-between items-center flex-wrap gap-4">
+            <div class="flex gap-4 items-center">
+                <a href="https://dxbians.com/termsandconditions" class="footer-link">Terms & Conditions</a>
+                <a href="https://dxbians.com/contact" class="footer-link">Contact</a>
+            </div>
+            <div class="flex justify-center">
+                <a href="https://dxbians.com" class="logo-frame">
+                    <h1 class="logo">Dxbians</h1>
+                </a>
+            </div>
+            <div class="flex gap-4 items-center">
+                <a href="https://instagram.com/dxbians" target="_blank" class="footer-link">Instagram</a>
+                <a href="https://youtube.com/@dxbians" target="_blank" class="footer-link">YouTube</a>
+                <a href="https://t.me/dxbians" target="_blank" class="footer-link">Telegram</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Admin Trigger Button -->
+<button class="admin-trigger" id="admin-trigger" title="Admin">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 4a3 3 0 110 6 3 3 0 010-6zm0 8c2 0 6 1 6 3v1H6v-1c0-2 4-3 6-3z"/></svg>
+</button>
+
+<!-- Admin Panel -->
+<div class="admin-panel" id="admin-panel">
+    <div class="admin-handle" id="admin-handle"></div>
+
+    <!-- Login Screen -->
+    <div id="admin-login-screen" class="admin-login-screen">
+        <div class="admin-login-title">Admin Access</div>
+        <p style="color:#888;font-size:0.85rem;margin-bottom:20px;">Enter admin password to continue</p>
+        <input type="password" id="admin-password-input" class="admin-input" placeholder="Password" style="max-width:300px;margin:0 auto 12px;">
+        <button class="admin-btn" style="max-width:300px;margin:0 auto;" onclick="attemptAdminLogin()">Login</button>
+        <p id="admin-login-error" style="color:#ef4444;font-size:0.8rem;margin-top:10px;display:none;">Incorrect password</p>
+    </div>
+
+    <!-- Admin Content (hidden until login) -->
+    <div id="admin-content" class="admin-logged-in">
+        <div class="admin-header">
+            <span class="admin-title">⚡ Dxbians Admin</span>
+            <div style="display:flex;gap:10px;align-items:center;">
+                <button onclick="adminLogout()" style="background:#333;color:#888;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:0.75rem;">Logout</button>
+                <button class="admin-close" onclick="closeAdmin()">×</button>
+            </div>
+        </div>
+
+        <div class="admin-tabs">
+            <div class="admin-tab active" onclick="switchAdminTab('claim')">Claim Pattern</div>
+            <div class="admin-tab" onclick="switchAdminTab('makers')">Onboard Maker</div>
+            <div class="admin-tab" onclick="switchAdminTab('registry')">Registry</div>
+            <div class="admin-tab" onclick="switchAdminTab('makerlist')">Makers</div>
+        </div>
+
+        <!-- Tab: Claim Pattern -->
+        <div class="admin-tab-content active" id="tab-claim">
+            <div class="admin-section-title">Claim Pattern Without Payment</div>
+            <div class="admin-grid">
+                <div>
+                    <label class="admin-label">Pattern ID</label>
+                    <input type="text" id="admin-claim-id" class="admin-input" placeholder="e.g. LGD432913D">
+                    <label class="admin-label">Owner Name</label>
+                    <input type="text" id="admin-claim-owner" class="admin-input" placeholder="Name or @handle">
+                    <label class="admin-label">Owner Email (optional)</label>
+                    <input type="email" id="admin-claim-email" class="admin-input" placeholder="email@example.com">
+                </div>
+                <div>
+                    <label class="admin-label">Rarity</label>
+                    <select id="admin-claim-rarity" class="admin-select">
+                        <option value="simple">Simple</option>
+                        <option value="rare">Rare</option>
+                        <option value="epic">Epic</option>
+                        <option value="legendary">Legendary</option>
+                    </select>
+                    <label class="admin-label">Claim Type</label>
+                    <select id="admin-claim-type" class="admin-select">
+                        <option value="promotion">Promotion</option>
+                        <option value="maker">Maker Onboarding</option>
+                        <option value="gift">Gift</option>
+                        <option value="reserved">Reserved</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                    <label class="admin-label">Reason / Notes</label>
+                    <input type="text" id="admin-claim-reason" class="admin-input" placeholder="e.g. Gifted to maker @xyz">
+                </div>
+            </div>
+            <div style="text-align:center;margin-top:5px;">
+                <p style="color:#888;font-size:0.8rem;margin-bottom:10px;">Or use current pattern from the generator</p>
+                <button class="admin-btn secondary" style="max-width:200px;margin:0 auto 8px;" onclick="useCurrentPattern()">Use Current Pattern</button>
+            </div>
+            <button class="admin-btn" onclick="adminClaimPattern()">Claim This Pattern</button>
+            <div id="admin-claim-result" style="margin-top:12px;font-size:0.85rem;display:none;padding:10px;border-radius:8px;"></div>
+        </div>
+
+        <!-- Tab: Onboard Maker -->
+        <div class="admin-tab-content" id="tab-makers">
+            <div class="admin-section-title">Onboard New Maker</div>
+            <div class="admin-grid">
+                <div>
+                    <label class="admin-label">Business Name</label>
+                    <input type="text" id="maker-business-name" class="admin-input" placeholder="e.g. Al Rashid Prints">
+                    <label class="admin-label">Owner Name</label>
+                    <input type="text" id="maker-owner-name" class="admin-input" placeholder="Full name">
+                    <label class="admin-label">Pattern ID (their icon)</label>
+                    <input type="text" id="maker-pattern-id" class="admin-input" placeholder="e.g. SMP1A2B3C">
+                    <label class="admin-label">WhatsApp Number</label>
+                    <input type="text" id="maker-whatsapp" class="admin-input" placeholder="+971 50 000 0000">
+                    <label class="admin-label">Email</label>
+                    <input type="email" id="maker-email" class="admin-input" placeholder="maker@email.com">
+                </div>
+                <div>
+                    <label class="admin-label">Location in Dubai</label>
+                    <input type="text" id="maker-location" class="admin-input" placeholder="e.g. Al Quoz, Deira">
+                    <label class="admin-label">Price Range</label>
+                    <select id="maker-price-range" class="admin-select">
+                        <option value="50-150 AED">50–150 AED</option>
+                        <option value="150-300 AED">150–300 AED</option>
+                        <option value="300-500 AED">300–500 AED</option>
+                        <option value="500+ AED">500+ AED</option>
+                    </select>
+                    <label class="admin-label">Products Offered (check all)</label>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px;">
+                        <label style="color:#ccc;font-size:0.8rem;display:flex;align-items:center;gap:6px;"><input type="checkbox" value="t-shirts" class="maker-product-check"> T-Shirts</label>
+                        <label style="color:#ccc;font-size:0.8rem;display:flex;align-items:center;gap:6px;"><input type="checkbox" value="hoodies" class="maker-product-check"> Hoodies</label>
+                        <label style="color:#ccc;font-size:0.8rem;display:flex;align-items:center;gap:6px;"><input type="checkbox" value="accessories" class="maker-product-check"> Accessories</label>
+                        <label style="color:#ccc;font-size:0.8rem;display:flex;align-items:center;gap:6px;"><input type="checkbox" value="bags" class="maker-product-check"> Bags</label>
+                        <label style="color:#ccc;font-size:0.8rem;display:flex;align-items:center;gap:6px;"><input type="checkbox" value="caps" class="maker-product-check"> Caps</label>
+                        <label style="color:#ccc;font-size:0.8rem;display:flex;align-items:center;gap:6px;"><input type="checkbox" value="embroidery" class="maker-product-check"> Embroidery</label>
+                        <label style="color:#ccc;font-size:0.8rem;display:flex;align-items:center;gap:6px;"><input type="checkbox" value="custom" class="maker-product-check"> Custom</label>
+                    </div>
+                    <label class="admin-label">Bio</label>
+                    <textarea id="maker-bio" class="admin-input" rows="3" placeholder="Short description of the maker..."></textarea>
+                </div>
+            </div>
+            <button class="admin-btn" onclick="onboardMaker()">Onboard Maker</button>
+            <div id="maker-onboard-result" style="margin-top:12px;font-size:0.85rem;display:none;padding:10px;border-radius:8px;"></div>
+        </div>
+
+        <!-- Tab: Registry -->
+        <div class="admin-tab-content" id="tab-registry">
+            <div class="admin-section-title">Claimed Patterns Registry</div>
+            <div style="display:flex;gap:10px;margin-bottom:15px;">
+                <input type="text" id="registry-search" class="admin-input" placeholder="Search pattern ID..." style="margin:0;">
+                <button class="admin-btn" style="width:auto;margin:0;" onclick="loadRegistry()">Refresh</button>
+            </div>
+            <div id="registry-list" style="max-height:400px;overflow-y:auto;">
+                <p style="color:#666;text-align:center;padding:20px;">Loading...</p>
+            </div>
+        </div>
+
+        <!-- Tab: Maker List -->
+        <div class="admin-tab-content" id="tab-makerlist">
+            <div class="admin-section-title">Active Makers</div>
+            <button class="admin-btn secondary" style="margin-bottom:15px;" onclick="loadMakerList()">Refresh</button>
+            <div id="maker-list" style="max-height:400px;overflow-y:auto;">
+                <p style="color:#666;text-align:center;padding:20px;">Loading...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Claim Pattern Modal -->
+<div id="claim-modal" class="modal-overlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title">Claim Your Pattern</h3>
+            <button class="modal-close" data-close-modal="claim-modal">&times;</button>
+        </div>
+        <div id="claim-form">
+            <div class="text-center mb-4">
+                <span id="modal-rarity-badge" class="rarity-badge simple">Simple</span>
+            </div>
+            <div class="pattern-id-container">
+                <div class="pattern-id-value" id="modal-pattern-id">SMP123456</div>
+                <button id="copy-id-btn" class="copy-btn relative">
+                    <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    <span class="copy-tooltip">Copy ID</span>
+                </button>
+            </div>
+            <div class="pattern-preview">
+                <div class="pattern-preview-container">
+                    <div id="preview-pattern-grid" class="pattern-preview-grid"></div>
+                </div>
+            </div>
+            <div class="price-info">
+                <div class="price-item"><p class="price-label">Price (USD)</p><p class="price-value" id="price-usd">$23.16</p></div>
+                <div class="price-item"><p class="price-label">Price (AED)</p><p class="price-value" id="price-aed">85 AED</p></div>
+            </div>
+            <!-- Owner info fields -->
+            <div style="margin-bottom:15px;">
+                <input type="text" id="buyer-name" placeholder="Your name" style="width:100%;padding:10px 14px;border:1px solid #d1d5db;border-radius:8px;margin-bottom:8px;font-size:0.875rem;">
+                <input type="email" id="buyer-email" placeholder="Your email" style="width:100%;padding:10px 14px;border:1px solid #d1d5db;border-radius:8px;font-size:0.875rem;">
+            </div>
+            <a href="#" id="payment-btn" class="payment-btn simple">Proceed to Payment</a>
+        </div>
+    </div>
+</div>
+
+<!-- Maker Detail Modal -->
+<div id="maker-modal" class="modal-overlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title" id="maker-modal-name">Maker Name</h3>
+            <button class="modal-close" data-close-modal="maker-modal">&times;</button>
+        </div>
+        <div style="text-align:center;">
+            <div class="maker-modal-pattern" id="maker-modal-pattern-display">
+                <div class="maker-modal-pattern-grid" id="maker-modal-grid"></div>
+            </div>
+            <div id="maker-modal-verified" class="maker-verified" style="margin:0 auto 10px;width:fit-content;">✦ Verified Maker</div>
+        </div>
+        <div id="maker-modal-body"></div>
+    </div>
+</div>
+
+<script>
+// ============================================================
+// SUPABASE CONFIG
+// ============================================================
+const SUPABASE_URL = 'https://jrdkxrqyrlxfijwprols.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpyZGt4cnF5cmx4Zmlqd3Byb2xzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3ODk5NjEsImV4cCI6MjA5MzM2NTk2MX0.hVX5n_P8oL0VoVxgvB9IBdaSHe3k5xAV5Ugj39NJJuo';
+const DXBIANS_CUT = 0.15; // 15% platform cut
+const ADMIN_PASSWORD = 'dxbians2024admin'; // Change this to your preferred password
+
+// ============================================================
+// SUPABASE HELPERS
+// ============================================================
+async function sbGet(table, filters = '') {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${filters}`, {
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    return res.json();
+}
+
+async function sbInsert(table, data) {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+        method: 'POST',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+        body: JSON.stringify(data)
+    });
+    return { ok: res.ok, status: res.status, data: await res.json() };
+}
+
+async function sbDelete(table, id, idField = 'id') {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${idField}=eq.${id}`, {
+        method: 'DELETE',
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    return res.ok;
+}
+
+async function isPatternClaimed(patternId) {
+    const data = await sbGet('patterns', `id=eq.${patternId}&select=id`);
+    return Array.isArray(data) && data.length > 0;
+}
+
+// ============================================================
+// GRID / PATTERN ENGINE (preserved from original)
+// ============================================================
+const GRID_SIZE = 7;
+const patternGrid = document.getElementById('pattern-grid');
+const patternIdEl = document.getElementById('pattern-id');
+const patternRarityEl = document.getElementById('pattern-rarity');
+const rarityDescription = document.getElementById('rarity-description');
+const claimBtn = document.getElementById('claim-btn');
+const clearBtn = document.getElementById('clear-btn');
+const generateBtn = document.getElementById('generate-btn');
+const rarityToggles = document.querySelectorAll('.rarity-toggle');
+const searchInput = document.getElementById('pattern-search');
+const searchBtn = document.getElementById('search-btn');
+const searchResult = document.getElementById('search-result');
+const paymentBtn = document.getElementById('payment-btn');
+const copyIdBtn = document.getElementById('copy-id-btn');
+const modalPatternId = document.getElementById('modal-pattern-id');
+const modalRarityBadge = document.getElementById('modal-rarity-badge');
+const successNotification = document.getElementById('success-notification');
+const notificationText = document.getElementById('notification-text');
+const claimModal = document.getElementById('claim-modal');
+const previewPatternGrid = document.getElementById('preview-pattern-grid');
+
+let currentPattern = [];
+let currentPatternId = '';
+let currentRarity = '';
+let selectedRarity = 'simple';
+let allMakers = [];
+let activeFilter = 'all';
+
+const prices = { simple: { usd: 23.16, aed: 85 }, rare: { usd: 35.42, aed: 130 }, epic: { usd: 62.67, aed: 230 }, legendary: { usd: 89.92, aed: 330 } };
+const stripeLinks = { simple: "https://buy.stripe.com/5kQcMY5vmakffV71EO14403", rare: "https://buy.stripe.com/aFadR2ga0783fV70AK14404", epic: "https://buy.stripe.com/dRmbIU7Du2RNdMZ4R014401", legendary: "https://buy.stripe.com/5kQ9AMga07836kxdnw14402" };
+const rarityDescriptions = { legendary: 'Legendary patterns are extremely rare with unique mathematical properties that occur in less than 1% of all possible combinations.', epic: 'Epic patterns feature complex symmetrical designs with intricate details, found in only about 5% of all patterns.', rare: 'Rare patterns have balanced symmetry and moderate complexity, representing about 15% of all possible patterns.', simple: 'Simple patterns have basic symmetry and are more common, making up about 80% of all possible patterns.' };
+const patternTypes = { legendary: ['golden_ratio','mandala','fractal','prime_spiral','fibonacci','harmonic'], epic: ['symmetrical','cellular','wave','vortex','crystalline','labyrinth'], rare: ['geometric','radial','modular','tessellation','flow','recursive'], simple: ['cross','border','diagonal','dots','corners','alternating'] };
+
+document.addEventListener('DOMContentLoaded', function() {
+    initializeGrid();
+    initializePreviewGrid();
+    setupEventListeners();
+    loadStats();
+    loadMakers();
+    checkForClaimedPattern();
+});
+
+function initializeGrid() {
+    patternGrid.innerHTML = '';
+    currentPattern = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0));
+    for (let i = 0; i < GRID_SIZE; i++) for (let j = 0; j < GRID_SIZE; j++) {
+        const cell = document.createElement('div');
+        cell.classList.add('grid-cell');
+        cell.dataset.row = i; cell.dataset.col = j;
+        cell.addEventListener('click', toggleCell);
+        patternGrid.appendChild(cell);
+    }
+    updateGridDisplay();
+    resetPatternInfo();
+}
+
+function initializePreviewGrid() {
+    previewPatternGrid.innerHTML = '';
+    for (let i = 0; i < GRID_SIZE; i++) for (let j = 0; j < GRID_SIZE; j++) {
+        const cell = document.createElement('div');
+        cell.classList.add('preview-cell');
+        cell.dataset.row = i; cell.dataset.col = j;
+        previewPatternGrid.appendChild(cell);
+    }
+}
+
+function setupEventListeners() {
+    generateBtn.addEventListener('click', generatePattern);
+    clearBtn.addEventListener('click', clearPattern);
+    rarityToggles.forEach(t => t.addEventListener('click', function() {
+        rarityToggles.forEach(x => x.classList.remove('active'));
+        this.classList.add('active');
+        selectedRarity = this.dataset.rarity;
+    }));
+    claimBtn.addEventListener('click', openClaimModal);
+    document.querySelectorAll('.modal-close').forEach(btn => {
+        btn.addEventListener('click', function() { document.getElementById(this.dataset.closeModal).classList.remove('active'); });
+    });
+    searchBtn.addEventListener('click', searchPattern);
+    copyIdBtn.addEventListener('click', copyPatternId);
+    paymentBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const name = document.getElementById('buyer-name').value.trim();
+        const email = document.getElementById('buyer-email').value.trim();
+        if (!name) { showNotification('Please enter your name', true); return; }
+        if (currentRarity && stripeLinks[currentRarity]) {
+            const url = new URL(stripeLinks[currentRarity]);
+            url.searchParams.append('pattern_id', currentPatternId);
+            if (name) url.searchParams.append('client_reference_id', currentPatternId);
+            window.open(url.toString(), '_blank');
+            claimModal.classList.remove('active');
+        }
+    });
+
+    // Product filters
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            activeFilter = this.dataset.filter;
+            renderMakers();
+        });
+    });
+
+    // Admin trigger
+    document.getElementById('admin-trigger').addEventListener('click', openAdmin);
+    document.getElementById('admin-handle').addEventListener('click', closeAdmin);
+
+    // Registry search
+    document.getElementById('registry-search').addEventListener('input', function() {
+        const q = this.value.toLowerCase();
+        document.querySelectorAll('.claimed-pattern-item').forEach(item => {
+            item.style.display = item.dataset.id.toLowerCase().includes(q) ? '' : 'none';
+        });
+    });
+}
+
+function toggleCell() {
+    const row = parseInt(this.dataset.row), col = parseInt(this.dataset.col);
+    currentPattern[row][col] = currentPattern[row][col] ? 0 : 1;
+    updateGridDisplay();
+    analyzePatternRarity();
+    evaluatePattern();
+}
+
+function updateGridDisplay() {
+    document.querySelectorAll('.grid-cell').forEach(cell => {
+        const r = parseInt(cell.dataset.row), c = parseInt(cell.dataset.col);
+        cell.classList.toggle('active', !!currentPattern[r][c]);
+    });
+}
+
+function updatePreviewGrid() {
+    previewPatternGrid.querySelectorAll('.preview-cell').forEach(cell => {
+        const r = parseInt(cell.dataset.row), c = parseInt(cell.dataset.col);
+        cell.classList.toggle('active', currentPattern[r][c] === 1);
+    });
+    modalPatternId.textContent = currentPatternId;
+    modalRarityBadge.textContent = currentRarity.charAt(0).toUpperCase() + currentRarity.slice(1);
+    modalRarityBadge.className = `rarity-badge ${currentRarity}`;
+    if (currentRarity && prices[currentRarity]) {
+        document.getElementById('price-usd').textContent = `$${prices[currentRarity].usd.toFixed(2)}`;
+        document.getElementById('price-aed').textContent = `${prices[currentRarity].aed} AED`;
+        paymentBtn.href = stripeLinks[currentRarity];
+        paymentBtn.className = `payment-btn ${currentRarity}`;
+    }
+}
+
+function resetPatternInfo() {
+    patternIdEl.textContent = '-'; patternRarityEl.textContent = '-';
+    patternRarityEl.className = '';
+    rarityDescription.textContent = 'Generate a pattern to see its rarity classification.';
+    claimBtn.disabled = true; currentPatternId = ''; currentRarity = '';
+}
+
+function clearPattern() { currentPattern = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0)); updateGridDisplay(); resetPatternInfo(); }
+
+function hasActivePattern() { return currentPattern.some(row => row.some(c => c === 1)); }
+
+function generatePatternId() {
+    const str = currentPattern.map(r => r.join('')).join('');
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) { hash = ((hash << 5) - hash) + str.charCodeAt(i); hash = hash & hash; }
+    let active = 0;
+    currentPattern.forEach(r => r.forEach(c => { if (c) active++; }));
+    const density = Math.floor((active / (GRID_SIZE * GRID_SIZE)) * 100);
+    const hashHex = Math.abs(hash).toString(16).substring(0, 5).toUpperCase();
+    const densityHex = density.toString(16).padStart(2, '0').toUpperCase();
+    const prefix = { simple: 'SMP', rare: 'RAR', epic: 'EPC', legendary: 'LGD' }[currentRarity] || 'PAT';
+    currentPatternId = `${prefix}${hashHex}${densityHex}`;
+    patternIdEl.textContent = currentPatternId;
+    return currentPatternId;
+}
+
+function analyzePatternRarity() {
+    if (!hasActivePattern()) { currentRarity = ''; return; }
+    let active = 0;
+    currentPattern.forEach(r => r.forEach(c => { if (c) active++; }));
+    const sym = calculateSymmetryScores();
+    const cmp = calculateComplexityScore();
+    const density = active / (GRID_SIZE * GRID_SIZE);
+    let score = sym.overall * 40 + cmp * 40 + Math.max(0, 20 - Math.abs(density - 0.4) * 100);
+    if (score >= 85) currentRarity = 'legendary';
+    else if (score >= 65) currentRarity = 'epic';
+    else if (score >= 40) currentRarity = 'rare';
+    else currentRarity = 'simple';
+}
+
+function calculateSymmetryScores() {
+    let hM=0,hT=0,vM=0,vT=0,d1M=0,d1T=0,d2M=0,d2T=0,rM=0,rT=0;
+    for (let i=0;i<GRID_SIZE;i++) for (let j=0;j<Math.ceil(GRID_SIZE/2);j++) { if(currentPattern[i][j]===currentPattern[i][GRID_SIZE-1-j])hM++; hT++; }
+    for (let j=0;j<GRID_SIZE;j++) for (let i=0;i<Math.ceil(GRID_SIZE/2);i++) { if(currentPattern[i][j]===currentPattern[GRID_SIZE-1-i][j])vM++; vT++; }
+    for (let i=0;i<GRID_SIZE;i++) for (let j=0;j<GRID_SIZE;j++) if(i!==j&&i<j){if(currentPattern[i][j]===currentPattern[j][i])d1M++;d1T++;}
+    for (let i=0;i<GRID_SIZE;i++) for (let j=0;j<GRID_SIZE;j++) if(i+j!==GRID_SIZE-1&&i+j<GRID_SIZE-1){if(currentPattern[i][j]===currentPattern[GRID_SIZE-1-j][GRID_SIZE-1-i])d2M++;d2T++;}
+    for (let i=0;i<GRID_SIZE;i++) for (let j=0;j<GRID_SIZE;j++){if(currentPattern[i][j]===currentPattern[GRID_SIZE-1-i][GRID_SIZE-1-j])rM++;rT++;}
+    return { overall: (hM/hT)*0.25+(vM/vT)*0.25+(d1T>0?d1M/d1T:0)*0.15+(d2T>0?d2M/d2T:0)*0.15+(rM/rT)*0.2 };
+}
+
+function calculateComplexityScore() {
+    let edges=0,total=0;
+    for(let i=0;i<GRID_SIZE;i++)for(let j=0;j<GRID_SIZE;j++){if(j<GRID_SIZE-1){total++;if(currentPattern[i][j]!==currentPattern[i][j+1])edges++;}if(i<GRID_SIZE-1){total++;if(currentPattern[i][j]!==currentPattern[i+1][j])edges++;}}
+    return (edges/total)*0.4 + Math.min(countClusters()/Math.ceil(GRID_SIZE*GRID_SIZE/2),1)*0.3 + calculateEntropy()*0.3;
+}
+
+function countClusters() {
+    const visited=Array(GRID_SIZE).fill().map(()=>Array(GRID_SIZE).fill(false));
+    let count=0;
+    function dfs(i,j,v){if(i<0||i>=GRID_SIZE||j<0||j>=GRID_SIZE||visited[i][j]||currentPattern[i][j]!==v)return;visited[i][j]=true;dfs(i+1,j,v);dfs(i-1,j,v);dfs(i,j+1,v);dfs(i,j-1,v);}
+    for(let i=0;i<GRID_SIZE;i++)for(let j=0;j<GRID_SIZE;j++)if(!visited[i][j]){dfs(i,j,currentPattern[i][j]);count++;}
+    return count;
+}
+
+function calculateEntropy() {
+    const pats={},tot=(GRID_SIZE-1)*(GRID_SIZE-1);
+    for(let i=0;i<GRID_SIZE-1;i++)for(let j=0;j<GRID_SIZE-1;j++){const k=[currentPattern[i][j],currentPattern[i][j+1],currentPattern[i+1][j],currentPattern[i+1][j+1]].join('');pats[k]=(pats[k]||0)+1;}
+    let e=0;
+    for(const k in pats){const p=pats[k]/tot;e-=p*Math.log2(p);}
+    return Math.min(e/4,1);
+}
+
+async function evaluatePattern() {
+    if (!hasActivePattern()) { resetPatternInfo(); return; }
+    patternRarityEl.textContent = currentRarity.charAt(0).toUpperCase() + currentRarity.slice(1);
+    patternRarityEl.className = `font-bold rarity-${currentRarity}`;
+    rarityDescription.textContent = rarityDescriptions[currentRarity];
+    generatePatternId();
+    const claimed = await isPatternClaimed(currentPatternId);
+    claimBtn.disabled = claimed;
+    if (claimed) { searchResult.textContent = 'This pattern has already been claimed.'; searchResult.className = 'search-result unavailable'; }
+    else { searchResult.textContent = ''; searchResult.className = 'search-result'; }
+}
+
+function generatePattern() {
+    generateBtn.classList.add('btn-loading');
+    createPatternByRarity(selectedRarity);
+    updateGridDisplay();
+    currentRarity = selectedRarity;
+    patternRarityEl.textContent = selectedRarity.charAt(0).toUpperCase() + selectedRarity.slice(1);
+    patternRarityEl.className = `font-bold rarity-${selectedRarity}`;
+    rarityDescription.textContent = rarityDescriptions[selectedRarity];
+    generatePatternId();
+    setTimeout(async () => {
+        generateBtn.classList.remove('btn-loading');
+        const claimed = await isPatternClaimed(currentPatternId);
+        claimBtn.disabled = claimed;
+    }, 500);
+}
+
+function createPatternByRarity(r) {
+    currentPattern = Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(0));
+    const types = patternTypes[r], type = types[Math.floor(Math.random()*types.length)];
+    let sv = Math.floor(Math.random()*1000000);
+    const rnd = () => { sv=(sv*9301+49297)%233280; return sv/233280; };
+    if(r==='legendary') generateLegendaryPattern(type,rnd);
+    else if(r==='epic') generateEpicPattern(type,rnd);
+    else if(r==='rare') generateRarePattern(type,rnd);
+    else generateSimplePattern(type,rnd);
+}
+
+// Pattern generators (preserved from original)
+function generateSimplePattern(t,rnd){const c=Math.floor(GRID_SIZE/2);switch(t){case'cross':for(let i=0;i<GRID_SIZE;i++){currentPattern[i][c]=1;currentPattern[c][i]=1;}break;case'border':for(let i=0;i<GRID_SIZE;i++){currentPattern[0][i]=currentPattern[GRID_SIZE-1][i]=currentPattern[i][0]=currentPattern[i][GRID_SIZE-1]=1;}break;case'diagonal':for(let i=0;i<GRID_SIZE;i++){currentPattern[i][i]=1;currentPattern[i][GRID_SIZE-1-i]=1;}break;case'dots':for(let i=1;i<GRID_SIZE;i+=2)for(let j=1;j<GRID_SIZE;j+=2)currentPattern[i][j]=1;break;case'corners':{const s=2;[[0,0],[0,GRID_SIZE-s],[GRID_SIZE-s,0],[GRID_SIZE-s,GRID_SIZE-s]].forEach(([r,c2])=>{for(let i=r;i<r+s;i++)for(let j=c2;j<c2+s;j++)currentPattern[i][j]=1;});break;}case'alternating':for(let i=0;i<GRID_SIZE;i++)for(let j=0;j<GRID_SIZE;j++)if((i+j)%2===0)currentPattern[i][j]=1;break;}addRandomVariations(2,rnd);}
+function generateRarePattern(t,rnd){const c=Math.floor(GRID_SIZE/2);switch(t){case'geometric':{const sq=Math.floor(GRID_SIZE*0.6),off=Math.floor((GRID_SIZE-sq)/2);for(let i=off;i<off+sq;i++)for(let j=off;j<off+sq;j++)if(i===off||i===off+sq-1||j===off||j===off+sq-1)currentPattern[i][j]=1;for(let i=0;i<GRID_SIZE;i++)if(i%2===0){currentPattern[i][i]=1;currentPattern[i][GRID_SIZE-1-i]=1;}break;}case'radial':for(let i=0;i<GRID_SIZE;i++)for(let j=0;j<GRID_SIZE;j++){const d=Math.sqrt((i-c)**2+(j-c)**2);if(Math.abs(d-1)<0.5||Math.abs(d-3)<0.5)currentPattern[i][j]=1;}break;case'modular':for(let i=0;i<GRID_SIZE;i++)for(let j=0;j<GRID_SIZE;j++)if((i*j)%3===1)currentPattern[i][j]=1;break;case'tessellation':for(let i=0;i<GRID_SIZE;i++)for(let j=0;j<GRID_SIZE;j++){const ti=i%4,tj=j%4;if((ti<2&&tj<2)||(ti>=2&&tj>=2))currentPattern[i][j]=1;}break;case'flow':for(let i=0;i<GRID_SIZE;i++)for(let j=0;j<GRID_SIZE;j++)if(Math.sin((i/GRID_SIZE)*Math.PI*2+(j/GRID_SIZE)*Math.PI*4)>0.3)currentPattern[i][j]=1;break;case'recursive':for(let i=0;i<GRID_SIZE;i++)for(let j=0;j<GRID_SIZE;j++)if(i%3===1&&j%3===1||i%2===0&&j%2===0)currentPattern[i][j]=1;break;}addSymmetricVariations(3,rnd);}
+function generateEpicPattern(t,rnd){const c=Math.floor(GRID_SIZE/2);switch(t){case'symmetrical':for(let i=0;i<=c;i++)for(let j=0;j<=c;j++)if(rnd()<0.4)currentPattern[i][j]=1;for(let i=0;i<=c;i++)for(let j=0;j<=c;j++){currentPattern[i][GRID_SIZE-1-j]=currentPattern[i][j];currentPattern[GRID_SIZE-1-i][j]=currentPattern[i][j];currentPattern[GRID_SIZE-1-i][GRID_SIZE-1-j]=currentPattern[i][j];}break;case'cellular':{for(let i=0;i<GRID_SIZE;i++)for(let j=0;j<GRID_SIZE;j++)if(rnd()<0.4)currentPattern[i][j]=1;const tmp=JSON.parse(JSON.stringify(currentPattern));for(let i=0;i<GRID_SIZE;i++)for(let j=0;j<GRID_SIZE;j++){let n=0;for(let di=-1;di<=1;di++)for(let dj=-1;dj<=1;dj++){if(di===0&&dj===0)continue;const ni=i+di,nj=j+dj;if(ni>=0&&ni<GRID_SIZE&&nj>=0&&nj<GRID_SIZE)n+=tmp[ni][nj];}currentPattern[i][j]=tmp[i][j]===1?(n===2||n===3?1:0):(n===3?1:0);}for(let i=0;i<GRID_SIZE;i++)for(let j=0;j<Math.ceil(GRID_SIZE/2);j++)currentPattern[i][GRID_SIZE-1-j]=currentPattern[i][j];for(let j=0;j<GRID_SIZE;j++)for(let i=0;i<Math.ceil(GRID_SIZE/2);i++)currentPattern[GRID_SIZE-1-i][j]=currentPattern[i][j];break;}case'wave':for(let i=0;i<GRID_SIZE;i++)for(let j=0;j<GRID_SIZE;j++)if(Math.sin((i/GRID_SIZE)*Math.PI*3)*Math.sin((j/GRID_SIZE)*Math.PI*2)>0.2)currentPattern[i][j]=1;break;case'vortex':for(let i=0;i<GRID_SIZE;i++)for(let j=0;j<GRID_SIZE;j++){let a=Math.atan2(j-c,i-c);if(a<0)a+=2*Math.PI;const d=Math.sqrt((i-c)**2+(j-c)**2),s=(a+d*0.5)%(Math.PI/4);if(s<0.5&&d<GRID_SIZE/2)currentPattern[i][j]=1;}break;case'crystalline':for(let i=0;i<GRID_SIZE;i++)for(let j=0;j<GRID_SIZE;j++){const dx=Math.abs(i-c),dy=Math.abs(j-c);if((dx+dy)%3===0||(dx*dy)%4===0)currentPattern[i][j]=1;}break;case'labyrinth':for(let i=0;i<GRID_SIZE;i++)for(let j=0;j<GRID_SIZE;j++)if(i%2===0||j%2===0)currentPattern[i][j]=1;for(let k=0;k<5;k++){const i=Math.floor(rnd()*(c+1)),j=Math.floor(rnd()*(c+1));currentPattern[i][j]=currentPattern[i][GRID_SIZE-1-j]=currentPattern[GRID_SIZE-1-i][j]=currentPattern[GRID_SIZE-1-i][GRID_SIZE-1-j]=0;}break;}addSymmetricVariations(4,rnd);}
+function generateLegendaryPattern(t,rnd){const c=Math.floor(GRID_SIZE/2);switch(t){case'mandala':for(let i=0;i<GRID_SIZE;i++)for(let j=0;j<GRID_SIZE;j++){const d=Math.sqrt((i-c)**2+(j-c)**2);let a=Math.atan2(j-c,i-c);if(a<0)a+=2*Math.PI;for(let r=1;r<=c;r+=2)if(Math.abs(d-r)<0.5)currentPattern[i][j]=1;const nr=8;for(let k=0;k<nr;k++)if(Math.abs(a%(k*(Math.PI/(nr/2))))<0.2&&d>1)currentPattern[i][j]=1;}break;case'fractal':{for(let i=0;i<GRID_SIZE;i++)for(let j=0;j<GRID_SIZE;j++)currentPattern[i][j]=1;function rm(x,y,sz){if(sz<3)return;const cs=Math.floor(sz/3),sx=x+cs,sy=y+cs;for(let i=0;i<cs;i++)for(let j=0;j<cs;j++)if(sy+i>=0&&sy+i<GRID_SIZE&&sx+j>=0&&sx+j<GRID_SIZE)currentPattern[sy+i][sx+j]=0;for(let di=0;di<3;di++)for(let dj=0;dj<3;dj++){if(di===1&&dj===1)continue;rm(x+dj*cs,y+di*cs,cs);}}rm(0,0,GRID_SIZE);break;}case'fibonacci':for(let i=0;i<GRID_SIZE;i++)for(let j=0;j<GRID_SIZE;j++){const r=Math.sqrt((i-c)**2+(j-c)**2);[1,1,2,3,5,8].forEach(f=>{if(Math.abs(r-f/3)<0.5)currentPattern[i][j]=1;});}break;case'harmonic':for(let i=0;i<GRID_SIZE;i++)for(let j=0;j<GRID_SIZE;j++){const x=(j-c)/c,y=(i-c)/c,d=Math.sqrt(x*x+y*y),w=(Math.sin(x*Math.PI*3)*Math.cos(y*Math.PI*3)+Math.sin((x+y)*Math.PI*2)*Math.cos((x-y)*Math.PI*2)+Math.sin(d*Math.PI*4))/3;if(w>0.2)currentPattern[i][j]=1;}break;default:for(let i=0;i<GRID_SIZE;i++)for(let j=0;j<GRID_SIZE;j++){const x=(j-c)/c,y=(i-c)/c,d=Math.sqrt(x*x+y*y);if(Math.sin(x*y*Math.PI*2)*Math.cos(d*Math.PI*3)>0.1)currentPattern[i][j]=1;}break;}addSymmetricVariations(5,rnd);ensurePerfectSymmetry();}
+function ensurePerfectSymmetry(){const c=Math.floor(GRID_SIZE/2),tmpl=[];for(let i=0;i<=c;i++){tmpl[i]=[];for(let j=0;j<=c;j++)tmpl[i][j]=currentPattern[i][j];}for(let i=0;i<GRID_SIZE;i++)for(let j=0;j<GRID_SIZE;j++){const ti=i<=c?i:GRID_SIZE-1-i,tj=j<=c?j:GRID_SIZE-1-j;currentPattern[i][j]=tmpl[ti][tj];}}
+function addRandomVariations(n,rnd){for(let i=0;i<n;i++){const r=Math.floor(rnd()*GRID_SIZE),c2=Math.floor(rnd()*GRID_SIZE);currentPattern[r][c2]=currentPattern[r][c2]?0:1;}}
+function addSymmetricVariations(n,rnd){const c=Math.floor(GRID_SIZE/2);for(let i=0;i<n;i++){const r=Math.floor(rnd()*(c+1)),c2=Math.floor(rnd()*(c+1)),v=currentPattern[r][c2]?0:1;currentPattern[r][c2]=currentPattern[r][GRID_SIZE-1-c2]=currentPattern[GRID_SIZE-1-r][c2]=currentPattern[GRID_SIZE-1-r][GRID_SIZE-1-c2]=v;}}
+
+function openClaimModal() { updatePreviewGrid(); claimModal.classList.add('active'); }
+
+async function searchPattern() {
+    const id = searchInput.value.trim().toUpperCase();
+    if (!id) { searchResult.textContent = 'Please enter a pattern ID.'; searchResult.className = 'search-result unavailable'; return; }
+    searchResult.textContent = 'Checking...'; searchResult.className = 'search-result available';
+    const claimed = await isPatternClaimed(id);
+    if (claimed) { searchResult.textContent = 'This pattern has already been claimed.'; searchResult.className = 'search-result unavailable'; }
+    else { searchResult.textContent = 'This pattern is available for claiming!'; searchResult.className = 'search-result available'; }
+}
+
+function copyPatternId() {
+    const t = document.createElement('textarea'); t.value = modalPatternId.textContent;
+    t.style.position='absolute'; t.style.left='-9999px'; document.body.appendChild(t);
+    t.select(); document.execCommand('copy'); document.body.removeChild(t);
+    const tip = copyIdBtn.querySelector('.copy-tooltip'); tip.textContent='Copied!';
+    setTimeout(()=>{tip.textContent='Copy ID';},2000);
+}
+
+async function checkForClaimedPattern() {
+    const params = new URLSearchParams(window.location.search);
+    const pid = params.get('pattern_id'), status = params.get('payment_status');
+    if (pid && status === 'success') {
+        const already = await isPatternClaimed(pid);
+        if (!already) {
+            await sbInsert('patterns', { id: pid, rarity: pid.substring(0,3).toLowerCase()==='lgd'?'legendary':pid.substring(0,3).toLowerCase()==='epc'?'epic':pid.substring(0,3).toLowerCase()==='rar'?'rare':'simple', claim_type: 'paid' });
+        }
+        showNotification(`Pattern ${pid} claimed successfully!`);
+        const url = new URL(window.location.href);
+        url.searchParams.delete('pattern_id'); url.searchParams.delete('payment_status');
+        window.history.replaceState({}, document.title, url.toString());
+        loadStats();
+    }
+}
+
+function showNotification(msg, isError = false) {
+    notificationText.textContent = msg;
+    successNotification.className = `notification${isError?' error':''}`;
+    successNotification.classList.add('show');
+    setTimeout(() => successNotification.classList.remove('show'), 5000);
+}
+
+// ============================================================
+// STATS
+// ============================================================
+async function loadStats() {
+    try {
+        const patterns = await sbGet('patterns', 'select=id');
+        const makers = await sbGet('makers', 'select=id&is_active=eq.true');
+        document.getElementById('total-claimed').textContent = Array.isArray(patterns) ? patterns.length : '—';
+        document.getElementById('total-makers').textContent = Array.isArray(makers) ? makers.length : '—';
+    } catch(e) {}
+}
+
+// ============================================================
+// MAKERS MARKETPLACE
+// ============================================================
+async function loadMakers() {
+    try {
+        allMakers = await sbGet('makers', 'is_active=eq.true&select=*');
+        if (!Array.isArray(allMakers)) allMakers = [];
+        renderMakers();
+    } catch(e) { allMakers = []; }
+}
+
+function renderMakers() {
+    const grid = document.getElementById('makers-grid');
+    let filtered = activeFilter === 'all' ? allMakers : allMakers.filter(m => m.products && m.products.includes(activeFilter));
+    if (filtered.length === 0) {
+        grid.innerHTML = `<div class="empty-makers col-span-full"><p class="text-lg font-medium mb-2">${activeFilter === 'all' ? 'Makers coming soon' : 'No makers for this category yet'}</p><p class="text-sm">Be the first maker to join Dxbians Dubai</p></div>`;
+        return;
+    }
+    grid.innerHTML = filtered.map(m => `
+        <div class="maker-card" onclick="openMakerModal('${m.id}')">
+            <div style="display:flex;gap:15px;align-items:flex-start;">
+                <div class="maker-card-pattern">
+                    <div class="maker-card-pattern-grid">${renderMiniGrid(m.grid_data)}</div>
+                </div>
+                <div style="flex:1;min-width:0;">
+                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;">
+                        <span style="font-weight:700;font-size:1rem;">${m.business_name}</span>
+                        <span class="maker-verified">✦ Verified</span>
+                    </div>
+                    <div style="font-size:0.8rem;color:#6b7280;margin-bottom:6px;">📍 ${m.location || 'Dubai'}</div>
+                    <div class="maker-rating">
+                        ${'★'.repeat(Math.round(m.rating||5))}${'☆'.repeat(5-Math.round(m.rating||5))}
+                        <span style="margin-left:4px;">${(m.rating||5).toFixed(1)}</span>
+                    </div>
+                    <div style="font-size:0.8rem;color:#374151;margin-top:6px;">💰 ${m.price_range || '—'}</div>
+                </div>
+            </div>
+            <div class="maker-products-list">
+                ${(m.products||[]).map(p=>`<span class="product-tag">${p}</span>`).join('')}
+            </div>
+            <button class="contact-maker-btn" onclick="event.stopPropagation();openMakerModal('${m.id}')">View & Contact</button>
+        </div>
+    `).join('');
+}
+
+function renderMiniGrid(gridData) {
+    if (!gridData) return Array(49).fill('<div class="maker-card-cell"></div>').join('');
+    const flat = Array.isArray(gridData) ? gridData.flat() : [];
+    return Array(49).fill(0).map((_, i) => `<div class="maker-card-cell${flat[i]?' active':''}"></div>`).join('');
+}
+
+function openMakerModal(makerId) {
+    const maker = allMakers.find(m => m.id === makerId);
+    if (!maker) return;
+    document.getElementById('maker-modal-name').textContent = maker.business_name;
+    const mgrid = document.getElementById('maker-modal-grid');
+    const flat = maker.grid_data ? (Array.isArray(maker.grid_data) ? maker.grid_data.flat() : []) : [];
+    mgrid.innerHTML = Array(49).fill(0).map((_,i)=>`<div class="maker-modal-cell${flat[i]?' active':''}"></div>`).join('');
+    document.getElementById('maker-modal-body').innerHTML = `
+        <div style="margin-bottom:15px;">
+            <p style="color:#6b7280;font-size:0.875rem;margin-bottom:5px;">📍 ${maker.location||'Dubai'} &nbsp;|&nbsp; 💰 ${maker.price_range||'—'}</p>
+            <p style="font-size:0.95rem;color:#374151;">${maker.bio||''}</p>
+        </div>
+        <div style="margin-bottom:15px;">
+            <p style="font-weight:600;margin-bottom:8px;">Products & Services</p>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;">${(maker.products||[]).map(p=>`<span class="product-tag">${p}</span>`).join('')}</div>
+        </div>
+        ${maker.whatsapp ? `<a href="https://wa.me/${maker.whatsapp.replace(/[^0-9]/g,'')}" target="_blank" class="whatsapp-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> Contact on WhatsApp</a>` : ''}
+        ${maker.email ? `<a href="mailto:${maker.email}" style="display:block;text-align:center;padding:10px;color:#6b7280;font-size:0.875rem;margin-top:8px;">📧 ${maker.email}</a>` : ''}
+    `;
+    document.getElementById('maker-modal').classList.add('active');
+}
+
+// ============================================================
+// ADMIN PANEL
+// ============================================================
+let adminLoggedIn = false;
+
+function openAdmin() {
+    document.getElementById('admin-panel').classList.add('open');
+    if (adminLoggedIn) { document.getElementById('admin-login-screen').style.display='none'; document.getElementById('admin-content').style.display='block'; }
+    else { document.getElementById('admin-login-screen').style.display='block'; document.getElementById('admin-content').style.display='none'; }
+}
+
+function closeAdmin() { document.getElementById('admin-panel').classList.remove('open'); }
+
+function attemptAdminLogin() {
+    const pw = document.getElementById('admin-password-input').value;
+    if (pw === ADMIN_PASSWORD) {
+        adminLoggedIn = true;
+        document.getElementById('admin-login-screen').style.display='none';
+        document.getElementById('admin-content').style.display='block';
+        loadRegistry(); loadMakerList();
+    } else {
+        document.getElementById('admin-login-error').style.display='block';
+        document.getElementById('admin-password-input').value='';
+    }
+}
+
+function adminLogout() { adminLoggedIn = false; document.getElementById('admin-password-input').value=''; closeAdmin(); }
+
+function switchAdminTab(tab) {
+    document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.admin-tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelector(`.admin-tab[onclick="switchAdminTab('${tab}')"]`).classList.add('active');
+    document.getElementById(`tab-${tab}`).classList.add('active');
+    if (tab==='registry') loadRegistry();
+    if (tab==='makerlist') loadMakerList();
+}
+
+function useCurrentPattern() {
+    if (!currentPatternId) { alert('Generate or create a pattern first.'); return; }
+    document.getElementById('admin-claim-id').value = currentPatternId;
+    document.getElementById('admin-claim-rarity').value = currentRarity || 'simple';
+}
+
+async function adminClaimPattern() {
+    const id = document.getElementById('admin-claim-id').value.trim().toUpperCase();
+    const owner = document.getElementById('admin-claim-owner').value.trim();
+    const email = document.getElementById('admin-claim-email').value.trim();
+    const rarity = document.getElementById('admin-claim-rarity').value;
+    const type = document.getElementById('admin-claim-type').value;
+    const reason = document.getElementById('admin-claim-reason').value.trim();
+    const res = document.getElementById('admin-claim-result');
+    if (!id) { res.style.display='block'; res.style.background='#fee2e2'; res.style.color='#b91c1c'; res.textContent='Please enter a Pattern ID.'; return; }
+    const already = await isPatternClaimed(id);
+    if (already) { res.style.display='block'; res.style.background='#fee2e2'; res.style.color='#b91c1c'; res.textContent=`Pattern ${id} is already claimed.`; return; }
+    const gridData = currentPatternId === id ? currentPattern : null;
+    const result = await sbInsert('patterns', { id, rarity, owner_name: owner||null, owner_email: email||null, claim_type: type, claim_reason: reason||null, grid_data: gridData });
+    if (result.ok) {
+        res.style.display='block'; res.style.background='#d1fae5'; res.style.color='#065f46';
+        res.textContent=`✓ Pattern ${id} claimed as ${type}${owner?' for '+owner:''}`;
+        loadStats(); loadRegistry();
+        document.getElementById('admin-claim-id').value='';
+        document.getElementById('admin-claim-owner').value='';
+        document.getElementById('admin-claim-email').value='';
+        document.getElementById('admin-claim-reason').value='';
+    } else {
+        res.style.display='block'; res.style.background='#fee2e2'; res.style.color='#b91c1c';
+        res.textContent=`Error: ${JSON.stringify(result.data)}`;
+    }
+}
+
+async function onboardMaker() {
+    const name = document.getElementById('maker-business-name').value.trim();
+    const owner = document.getElementById('maker-owner-name').value.trim();
+    const patternId = document.getElementById('maker-pattern-id').value.trim().toUpperCase();
+    const whatsapp = document.getElementById('maker-whatsapp').value.trim();
+    const email = document.getElementById('maker-email').value.trim();
+    const location = document.getElementById('maker-location').value.trim();
+    const priceRange = document.getElementById('maker-price-range').value;
+    const bio = document.getElementById('maker-bio').value.trim();
+    const products = [...document.querySelectorAll('.maker-product-check:checked')].map(c=>c.value);
+    const res = document.getElementById('maker-onboard-result');
+    if (!name || !patternId) { res.style.display='block'; res.style.background='#fee2e2'; res.style.color='#b91c1c'; res.textContent='Business name and Pattern ID are required.'; return; }
+
+    // First ensure pattern is claimed as maker type
+    const already = await isPatternClaimed(patternId);
+    if (!already) {
+        await sbInsert('patterns', { id: patternId, rarity: 'simple', owner_name: owner||name, claim_type: 'maker', claim_reason: `Maker onboarding: ${name}` });
+    }
+
+    // Get the grid data for this pattern if it's the current one
+    const gridData = currentPatternId === patternId ? currentPattern : null;
+
+    const result = await sbInsert('makers', { pattern_id: patternId, business_name: name, owner_name: owner||null, location: location||'Dubai', whatsapp: whatsapp||null, email: email||null, products: products, price_range: priceRange, bio: bio||null, grid_data: gridData, is_active: true, rating: 5 });
+    if (result.ok) {
+        res.style.display='block'; res.style.background='#d1fae5'; res.style.color='#065f46';
+        res.textContent=`✓ ${name} onboarded successfully as a Dxbians maker!`;
+        loadMakers(); loadStats(); loadMakerList();
+        ['maker-business-name','maker-owner-name','maker-pattern-id','maker-whatsapp','maker-email','maker-location','maker-bio'].forEach(id=>document.getElementById(id).value='');
+        document.querySelectorAll('.maker-product-check').forEach(c=>c.checked=false);
+    } else {
+        res.style.display='block'; res.style.background='#fee2e2'; res.style.color='#b91c1c';
+        res.textContent=`Error: ${JSON.stringify(result.data)}`;
+    }
+}
+
+async function loadRegistry() {
+    const list = document.getElementById('registry-list');
+    list.innerHTML='<p style="color:#666;text-align:center;padding:20px;">Loading...</p>';
+    const data = await sbGet('patterns', 'select=*&order=claimed_at.desc');
+    if (!Array.isArray(data) || data.length===0) { list.innerHTML='<p style="color:#666;text-align:center;padding:20px;">No patterns claimed yet.</p>'; return; }
+    list.innerHTML = data.map(p=>`
+        <div class="claimed-pattern-item" data-id="${p.id}">
+            <div>
+                <div class="claimed-pattern-id">${p.id}</div>
+                <div class="claimed-pattern-meta">${p.claim_type||'paid'} · ${p.owner_name||'Anonymous'} · ${p.rarity}</div>
+                ${p.claim_reason?`<div class="claimed-pattern-meta" style="font-style:italic;">${p.claim_reason}</div>`:''}
+            </div>
+            <button class="unclaim-btn" onclick="unclaimPattern('${p.id}')">Release</button>
+        </div>
+    `).join('');
+}
+
+async function unclaimPattern(id) {
+    if (!confirm(`Release pattern ${id}? This makes it available again.`)) return;
+    const ok = await sbDelete('patterns', id);
+    if (ok) { showNotification(`Pattern ${id} released.`); loadRegistry(); loadStats(); }
+    else showNotification('Error releasing pattern.', true);
+}
+
+async function loadMakerList() {
+    const list = document.getElementById('maker-list');
+    list.innerHTML='<p style="color:#666;text-align:center;padding:20px;">Loading...</p>';
+    const data = await sbGet('makers', 'select=*&order=created_at.desc');
+    if (!Array.isArray(data) || data.length===0) { list.innerHTML='<p style="color:#666;text-align:center;padding:20px;">No makers onboarded yet.</p>'; return; }
+    list.innerHTML = data.map(m=>`
+        <div class="maker-item">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                    <div class="maker-name">${m.business_name}</div>
+                    <div class="maker-pattern">${m.pattern_id||'—'} · ${m.location||'Dubai'}</div>
+                    <div style="font-size:0.75rem;color:#888;margin-top:4px;">${(m.products||[]).join(', ')}</div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+                    <span class="maker-status active">Active</span>
+                    <button class="unclaim-btn" onclick="removeMaker('${m.id}')">Remove</button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+async function removeMaker(id) {
+    if (!confirm('Remove this maker from the platform?')) return;
+    const ok = await sbDelete('makers', id);
+    if (ok) { showNotification('Maker removed.'); loadMakers(); loadMakerList(); loadStats(); }
+    else showNotification('Error removing maker.', true);
+}
+</script>
+</body>
+</html>

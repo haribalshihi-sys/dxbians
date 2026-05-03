@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms & Conditions — Dxbians</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Bebas+Neue&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root { --gold: #f59e0b; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Roboto', sans-serif; background: #000; color: #fff; overflow-x: hidden; }
+
+        .site-header { position: sticky; top: 0; z-index: 200; background: rgba(0,0,0,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 14px 0; }
+        .header-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
+        .header-nav { display: flex; align-items: center; gap: 4px; }
+        .header-nav a { color: rgba(255,255,255,0.6); text-decoration: none; padding: 7px 14px; border-radius: 8px; font-size: 0.875rem; font-weight: 500; transition: all 0.2s; }
+        .header-nav a:hover { color: #fff; background: rgba(255,255,255,0.08); }
+        .logo-frame { display: inline-block; padding: 7px 14px; background: #fff; border-radius: 8px; text-decoration: none; transition: transform 0.2s; }
+        .logo-frame:hover { transform: scale(1.03); }
+        .logo-text { font-family: 'Press Start 2P', cursive; font-size: 16px; color: #000; line-height: 1; display: block; }
+        .coming-soon-pill { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.3); padding: 7px 14px; border-radius: 8px; font-size: 0.75rem; font-weight: 500; }
+
+        .site-footer { background: #000; border-top: 1px solid #111; padding: 28px 0; }
+        .footer-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+        .footer-link { color: rgba(255,255,255,0.35); text-decoration: none; font-size: 0.8rem; transition: color 0.2s; }
+        .footer-link:hover { color: #fff; }
+
+        /* T&C LAYOUT */
+        .tc-page { max-width: 800px; margin: 0 auto; padding: 70px 24px 80px; }
+        .tc-header { margin-bottom: 50px; padding-bottom: 30px; border-bottom: 1px solid #111; }
+        .tc-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; }
+        .tc-title { font-family: 'Bebas Neue', cursive; font-size: clamp(40px, 7vw, 72px); line-height: 1; margin-bottom: 16px; }
+        .tc-meta { font-size: 0.8rem; color: #333; line-height: 1.7; }
+        .tc-meta strong { color: #555; }
+
+        /* TOC */
+        .toc { background: #0a0a0a; border: 1px solid #111; border-radius: 12px; padding: 28px; margin-bottom: 50px; }
+        .toc-title { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: #444; margin-bottom: 16px; }
+        .toc-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+        .toc-list a { color: #555; text-decoration: none; font-size: 0.875rem; transition: color 0.2s; display: flex; align-items: center; gap: 10px; }
+        .toc-list a:hover { color: var(--gold); }
+        .toc-num { font-size: 0.7rem; color: #333; width: 20px; }
+
+        /* SECTIONS */
+        .tc-section { margin-bottom: 48px; padding-bottom: 48px; border-bottom: 1px solid #0f0f0f; }
+        .tc-section:last-child { border-bottom: none; }
+        .tc-section-num { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em; color: var(--gold); text-transform: uppercase; margin-bottom: 8px; }
+        .tc-section-title { font-family: 'Bebas Neue', cursive; font-size: 28px; color: #fff; margin-bottom: 20px; }
+        .tc-body { font-size: 0.9rem; color: #555; line-height: 1.9; }
+        .tc-body p { margin-bottom: 14px; }
+        .tc-body p:last-child { margin-bottom: 0; }
+        .tc-body strong { color: #888; font-weight: 600; }
+        .tc-body a { color: var(--gold); text-decoration: none; }
+        .tc-body a:hover { text-decoration: underline; }
+        .tc-list { list-style: none; padding-left: 0; margin: 14px 0; display: flex; flex-direction: column; gap: 8px; }
+        .tc-list li { padding-left: 20px; position: relative; font-size: 0.875rem; color: #555; line-height: 1.7; }
+        .tc-list li::before { content: '—'; position: absolute; left: 0; color: #333; }
+        .tc-highlight { background: #0a0a0a; border: 1px solid #1a1a1a; border-left: 3px solid var(--gold); border-radius: 0 8px 8px 0; padding: 16px 20px; margin: 20px 0; font-size: 0.875rem; color: #666; line-height: 1.7; }
+
+        @media (max-width: 480px) { .hide-mobile { display: none; } }
+    </style>
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-inner">
+        <nav class="header-nav">
+            <a href="https://dxbians.com/about">About</a>
+            <a href="https://dxbians.com/patterns" class="hide-mobile">Patterns</a>
+        </nav>
+        <a href="https://dxbians.com" class="logo-frame"><span class="logo-text">Dxbians</span></a>
+        <nav class="header-nav">
+            <a href="https://dxbians.com/market" class="hide-mobile">Market</a>
+            <span class="coming-soon-pill hide-mobile">Login — Coming Soon</span>
+        </nav>
+    </div>
+</header>
+
+<div class="tc-page">
+    <div class="tc-header">
+        <div class="tc-label">Legal</div>
+        <h1 class="tc-title">Terms &<br>Conditions</h1>
+        <div class="tc-meta">
+            <strong>Effective Date:</strong> 14 July 2025<br>
+            <strong>Last Updated:</strong> 14 July 2025<br>
+            <strong>Platform:</strong> Dxbians (dxbians.com)<br>
+            <strong>Operated by:</strong> Harib Alshihi for Innovation & AI Research & Consultancies<br>
+            <strong>License No:</strong> 1366538 — Dubai Economy & Tourism<br>
+            <strong>Jurisdiction:</strong> Dubai, United Arab Emirates
+        </div>
+    </div>
+
+    <!-- TOC -->
+    <div class="toc">
+        <div class="toc-title">Contents</div>
+        <ul class="toc-list">
+            <li><a href="#s1"><span class="toc-num">01</span> Acceptance of Terms</a></li>
+            <li><a href="#s2"><span class="toc-num">02</span> The Dxbians Platform</a></li>
+            <li><a href="#s3"><span class="toc-num">03</span> Pattern Ownership & Registration</a></li>
+            <li><a href="#s4"><span class="toc-num">04</span> Founder Bundle</a></li>
+            <li><a href="#s5"><span class="toc-num">05</span> Pattern Rarity & Classification</a></li>
+            <li><a href="#s6"><span class="toc-num">06</span> Pattern Resale & Transfer</a></li>
+            <li><a href="#s7"><span class="toc-num">07</span> Maker Marketplace</a></li>
+            <li><a href="#s8"><span class="toc-num">08</span> Platform Fees & Payments</a></li>
+            <li><a href="#s9"><span class="toc-num">09</span> Maker Credit</a></li>
+            <li><a href="#s10"><span class="toc-num">10</span> Prohibited Conduct</a></li>
+            <li><a href="#s11"><span class="toc-num">11</span> Intellectual Property</a></li>
+            <li><a href="#s12"><span class="toc-num">12</span> Disclaimers & Limitation of Liability</a></li>
+            <li><a href="#s13"><span class="toc-num">13</span> Refunds & Cancellations</a></li>
+            <li><a href="#s14"><span class="toc-num">14</span> Privacy & Data</a></li>
+            <li><a href="#s15"><span class="toc-num">15</span> Governing Law & Disputes</a></li>
+            <li><a href="#s16"><span class="toc-num">16</span> Changes to These Terms</a></li>
+            <li><a href="#s17"><span class="toc-num">17</span> Contact</a></li>
+        </ul>
+    </div>
+
+    <!-- SECTIONS -->
+    <div id="s1" class="tc-section">
+        <div class="tc-section-num">01</div>
+        <div class="tc-section-title">Acceptance of Terms</div>
+        <div class="tc-body">
+            <p>By accessing or using Dxbians (the "Platform"), including visiting dxbians.com, generating a pattern, claiming a pattern, purchasing a bundle, or placing an order with a maker, you ("User", "you") agree to be bound by these Terms and Conditions ("Terms").</p>
+            <p>If you do not agree to these Terms, you must not use the Platform. These Terms constitute a legally binding agreement between you and <strong>Harib Alshihi for Innovation & AI Research & Consultancies</strong> ("Dxbians", "we", "us", "our"), a Sole Establishment registered under Dubai Economy & Tourism, License No. 1366538, Dubai, United Arab Emirates.</p>
+            <p>By using the Platform, you confirm that you are at least 18 years of age, or that you are using the Platform under the supervision of a parent or legal guardian who agrees to these Terms.</p>
+        </div>
+    </div>
+
+    <div id="s2" class="tc-section">
+        <div class="tc-section-num">02</div>
+        <div class="tc-section-title">The Dxbians Platform</div>
+        <div class="tc-body">
+            <p>Dxbians is a digital platform that enables users to generate, claim, and own unique grid-based patterns ("Patterns"). These Patterns are registered in a centralised database and may be used as personal identity icons, printed on physical items through local makers, or traded on the Dxbians marketplace.</p>
+            <p>The Platform includes:</p>
+            <ul class="tc-list">
+                <li>A Pattern Generator allowing users to generate or hand-craft unique 7×7 grid patterns</li>
+                <li>A Pattern Registry where claimed Patterns are permanently associated with their owner</li>
+                <li>A Maker Marketplace connecting Pattern owners with verified local craftsmen</li>
+                <li>A Market where claimed Patterns may be listed for resale</li>
+                <li>A Founder Bundle — a limited promotional offering</li>
+            </ul>
+            <p>Dxbians reserves the right to modify, suspend, or discontinue any part of the Platform at any time with reasonable notice.</p>
+        </div>
+    </div>
+
+    <div id="s3" class="tc-section">
+        <div class="tc-section-num">03</div>
+        <div class="tc-section-title">Pattern Ownership & Registration</div>
+        <div class="tc-body">
+            <p>Upon successful payment and registration, a Pattern is permanently associated with the registered owner in the Dxbians database. <strong>Only one person may own any given Pattern at any one time.</strong> Once claimed, a Pattern is removed from availability and cannot be claimed by any other user.</p>
+            <p>Pattern ownership on Dxbians confers the following rights:</p>
+            <ul class="tc-list">
+                <li>The exclusive right to display and use that Pattern as a personal identity icon</li>
+                <li>The right to commission Dxbians-affiliated makers to print or craft the Pattern onto physical items</li>
+                <li>The right to list the Pattern for resale on the Dxbians Market (subject to Section 6)</li>
+                <li>Any additional rights expressly stated at the time of purchase</li>
+            </ul>
+            <div class="tc-highlight">Pattern ownership as described on Dxbians is a registry-based system managed by Dxbians. It does not constitute ownership of a blockchain token, NFT, intellectual property right, trademark, or any other form of registered legal property right unless expressly stated in writing by Dxbians.</div>
+            <p>Dxbians reserves the right to remove or invalidate a Pattern registration in cases of fraud, technical error, duplicate registration, or violation of these Terms, and will provide a full refund in such cases.</p>
+        </div>
+    </div>
+
+    <div id="s4" class="tc-section">
+        <div class="tc-section-num">04</div>
+        <div class="tc-section-title">Founder Bundle</div>
+        <div class="tc-body">
+            <p>The Founder Bundle is a limited promotional offer available to the first 1,000 users who purchase it. It includes one Pattern of each rarity tier (Simple, Rare, Epic, Legendary), 388 AED in Maker Credit, a permanent ⬡ FOUNDER status tag on all four Patterns, and Market resale rights on all four Patterns.</p>
+            <p>The following conditions apply to the Founder Bundle:</p>
+            <ul class="tc-list">
+                <li>Limited to one bundle per person</li>
+                <li>The 1,000-slot limit is final and enforced by the Dxbians database. Once all slots are claimed, the offer is permanently closed</li>
+                <li>Patterns included in the bundle are auto-generated and permanently registered to the purchaser upon confirmed payment</li>
+                <li>The ⬡ FOUNDER tag is attached to the Pattern itself and transfers permanently to any subsequent owner upon resale</li>
+                <li>The 388 AED Maker Credit is valid for 12 months from the date of bundle purchase and may be split across multiple makers</li>
+                <li>The Founder Bundle price of 777 AED is non-negotiable and subject to these Terms</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="s5" class="tc-section">
+        <div class="tc-section-num">05</div>
+        <div class="tc-section-title">Pattern Rarity & Classification</div>
+        <div class="tc-body">
+            <p>Patterns are automatically classified into four rarity tiers based on mathematical analysis of their structure, including symmetry, complexity, entropy, and cell density: <strong>Simple, Rare, Epic,</strong> and <strong>Legendary</strong>.</p>
+            <p>Rarity classification is determined by the Dxbians algorithm at the time of generation or manual creation. Dxbians makes no guarantee that any manually created Pattern will achieve a specific rarity tier. The rarity system is provided for informational and collectibility purposes.</p>
+            <p>Rarity tier descriptions (e.g., "occurs in less than 1% of all patterns") are approximations based on mathematical modelling and do not constitute a guarantee of scarcity or value.</p>
+        </div>
+    </div>
+
+    <div id="s6" class="tc-section">
+        <div class="tc-section-num">06</div>
+        <div class="tc-section-title">Pattern Resale & Transfer</div>
+        <div class="tc-body">
+            <p>Pattern owners may list their Patterns for resale on the Dxbians Market, subject to the following:</p>
+            <ul class="tc-list">
+                <li>Resale is conducted through the Dxbians platform only. Off-platform transfers are not recognised by Dxbians and will not update the registry</li>
+                <li>Dxbians charges a platform fee on all resale transactions (see Section 8)</li>
+                <li>All status tags, including the ⬡ FOUNDER tag, are permanently attached to the Pattern and transfer with it to the new owner upon completion of a resale transaction</li>
+                <li>The seller is responsible for the accuracy of any listing information</li>
+                <li>Dxbians reserves the right to remove any listing that violates these Terms or applicable law</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="s7" class="tc-section">
+        <div class="tc-section-num">07</div>
+        <div class="tc-section-title">Maker Marketplace</div>
+        <div class="tc-body">
+            <p>The Dxbians Maker Marketplace connects Pattern owners ("Buyers") with verified local craftsmen and manufacturers ("Makers") who can produce physical items bearing the Buyer's Pattern.</p>
+            <p><strong>Maker obligations:</strong> Makers listed on Dxbians agree to produce items to a reasonable standard of quality, deliver within stated timeframes, and comply with all applicable UAE laws and regulations.</p>
+            <p><strong>Buyer obligations:</strong> Buyers agree to provide accurate Pattern information and to pay the agreed amount for orders placed.</p>
+            <p><strong>Dxbians role:</strong> Dxbians acts as an intermediary platform and is not a party to the transaction between Buyer and Maker. Dxbians does not manufacture, inspect, or guarantee any physical items produced by Makers.</p>
+            <div class="tc-highlight">Dxbians is not liable for the quality, fitness, delivery, or any defect of physical items produced by Makers. Any disputes regarding physical orders must be resolved between the Buyer and the Maker directly, with Dxbians available to assist in mediation where reasonably possible.</div>
+            <p>Dxbians reserves the right to remove any Maker from the platform for violations of these Terms, poor performance, or any conduct deemed harmful to users or the platform.</p>
+        </div>
+    </div>
+
+    <div id="s8" class="tc-section">
+        <div class="tc-section-num">08</div>
+        <div class="tc-section-title">Platform Fees & Payments</div>
+        <div class="tc-body">
+            <p>Dxbians charges fees for the following transactions:</p>
+            <ul class="tc-list">
+                <li><strong>Pattern Claims:</strong> Fixed prices per rarity tier (Simple: 85 AED, Rare: 130 AED, Epic: 230 AED, Legendary: 330 AED), subject to change with notice</li>
+                <li><strong>Founder Bundle:</strong> 777 AED (fixed, limited offer)</li>
+                <li><strong>Maker Orders:</strong> A platform fee of 15% (fifteen percent) is deducted from all orders placed through the Maker Marketplace. The remainder is paid to the Maker</li>
+                <li><strong>Pattern Resales:</strong> A platform fee applies to all resale transactions. The applicable rate will be displayed at the time of listing</li>
+            </ul>
+            <p>All payments are processed through Stripe. By making a payment on Dxbians, you agree to Stripe's terms of service. All prices are displayed in AED (UAE Dirhams) unless otherwise stated.</p>
+            <p>Dxbians reserves the right to modify pricing at any time. Price changes will not affect transactions already completed.</p>
+        </div>
+    </div>
+
+    <div id="s9" class="tc-section">
+        <div class="tc-section-num">09</div>
+        <div class="tc-section-title">Maker Credit</div>
+        <div class="tc-body">
+            <p>Maker Credit is a non-monetary credit issued by Dxbians as part of the Founder Bundle. The following conditions apply:</p>
+            <ul class="tc-list">
+                <li>Maker Credit has no cash value and cannot be withdrawn, transferred, or redeemed for cash</li>
+                <li>Maker Credit is valid for 12 months from the date of the Founder Bundle purchase</li>
+                <li>Maker Credit may be split across multiple maker orders at the Buyer's discretion</li>
+                <li>Maker Credit may only be used on orders placed through the Dxbians platform with listed makers</li>
+                <li>Unused Maker Credit expires after the validity period and will not be refunded or extended except at Dxbians' sole discretion</li>
+                <li>Dxbians reserves the right to modify the Maker Credit programme with 30 days' notice to affected users</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="s10" class="tc-section">
+        <div class="tc-section-num">10</div>
+        <div class="tc-section-title">Prohibited Conduct</div>
+        <div class="tc-body">
+            <p>You agree not to:</p>
+            <ul class="tc-list">
+                <li>Attempt to claim a Pattern that has already been registered to another user</li>
+                <li>Use automated tools, bots, or scripts to generate, claim, or interact with Patterns in bulk</li>
+                <li>Create multiple accounts to circumvent the one-bundle-per-person policy</li>
+                <li>Misrepresent your identity, ownership of a Pattern, or any other information on the Platform</li>
+                <li>Use the Platform for any unlawful purpose under the laws of the United Arab Emirates</li>
+                <li>Interfere with, damage, or disrupt the Platform, its servers, or its database</li>
+                <li>Reproduce, duplicate, or resell any part of the Platform without express written permission</li>
+                <li>Use any Pattern you do not own for commercial purposes without authorisation from the registered owner</li>
+            </ul>
+            <p>Violations may result in account suspension, Pattern invalidation, and legal action where applicable.</p>
+        </div>
+    </div>
+
+    <div id="s11" class="tc-section">
+        <div class="tc-section-num">11</div>
+        <div class="tc-section-title">Intellectual Property</div>
+        <div class="tc-body">
+            <p>The Dxbians name, logo, website design, platform code, and all associated branding are the intellectual property of Harib Alshihi for Innovation & AI Research & Consultancies. All rights are reserved.</p>
+            <p>The Pattern generation algorithm, rarity classification system, and platform architecture are proprietary to Dxbians.</p>
+            <p>Upon claiming a Pattern, the registered owner is granted a personal, non-exclusive, non-transferable (except via resale through the platform) licence to use that Pattern as a personal identity icon and on physical items for personal or commercial use. This licence does not confer any intellectual property rights in the underlying algorithm or platform.</p>
+            <p>Dxbians does not claim intellectual property rights over individual Patterns claimed and registered by users.</p>
+        </div>
+    </div>
+
+    <div id="s12" class="tc-section">
+        <div class="tc-section-num">12</div>
+        <div class="tc-section-title">Disclaimers & Limitation of Liability</div>
+        <div class="tc-body">
+            <p>The Platform is provided on an "as is" and "as available" basis. Dxbians makes no warranties, express or implied, regarding the Platform's availability, accuracy, or fitness for a particular purpose.</p>
+            <div class="tc-highlight">To the fullest extent permitted by UAE law, Dxbians shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits, data, or goodwill, arising from your use of the Platform or any transaction conducted through it.</div>
+            <p>Dxbians' total liability to you for any claim arising from these Terms or your use of the Platform shall not exceed the amount you paid to Dxbians in the 30 days preceding the event giving rise to the claim.</p>
+            <p>Dxbians does not guarantee the investment value or future value of any Pattern. Patterns are digital registry entries and their value is determined solely by market demand.</p>
+        </div>
+    </div>
+
+    <div id="s13" class="tc-section">
+        <div class="tc-section-num">13</div>
+        <div class="tc-section-title">Refunds & Cancellations</div>
+        <div class="tc-body">
+            <p><strong>Pattern Claims:</strong> All Pattern claims are final and non-refundable once a Pattern has been registered to your name in the Dxbians database. This is because the Pattern is immediately removed from availability for all other users.</p>
+            <p><strong>Founder Bundle:</strong> The Founder Bundle is non-refundable once patterns have been generated and registered. If a technical error prevents successful registration, a full refund will be issued within 7 business days.</p>
+            <p><strong>Maker Orders:</strong> Refund and cancellation policies for maker orders are agreed between the Buyer and the Maker at the time of order. Dxbians will assist in mediation where a resolution cannot be reached. Dxbians' platform fee is non-refundable once an order is placed.</p>
+            <p><strong>Exceptions:</strong> Dxbians will provide a full refund in the event of a technical duplicate registration, platform error resulting in incorrect Pattern assignment, or where required by UAE consumer protection regulations.</p>
+            <p>To request a refund where applicable, contact us at <a href="https://wa.me/971529973222">+971 52 997 3222</a> or via <a href="https://dxbians.com/contact">dxbians.com/contact</a>.</p>
+        </div>
+    </div>
+
+    <div id="s14" class="tc-section">
+        <div class="tc-section-num">14</div>
+        <div class="tc-section-title">Privacy & Data</div>
+        <div class="tc-body">
+            <p>By using Dxbians, you agree that we may collect and store the following information:</p>
+            <ul class="tc-list">
+                <li>Name and email address provided at the time of purchase or registration</li>
+                <li>Pattern ownership records in the Dxbians database</li>
+                <li>Transaction records processed through Stripe</li>
+                <li>Contact information provided voluntarily (e.g. Instagram handle)</li>
+            </ul>
+            <p>This information is used solely to operate the Platform, register Pattern ownership, process payments, and communicate with users. We do not sell your personal data to third parties.</p>
+            <p>Payment information is processed exclusively by Stripe and is not stored by Dxbians. By making a payment, you also agree to Stripe's Privacy Policy.</p>
+            <p>Dxbians complies with applicable UAE data protection laws. You have the right to request access to, correction of, or deletion of your personal data by contacting us directly.</p>
+        </div>
+    </div>
+
+    <div id="s15" class="tc-section">
+        <div class="tc-section-num">15</div>
+        <div class="tc-section-title">Governing Law & Disputes</div>
+        <div class="tc-body">
+            <p>These Terms are governed by and construed in accordance with the laws of the <strong>United Arab Emirates</strong>, specifically the laws applicable in the Emirate of <strong>Dubai</strong>.</p>
+            <p>Any dispute arising from or in connection with these Terms or your use of the Platform shall first be referred to good-faith negotiation between you and Dxbians. If the dispute is not resolved within 30 days of written notice, it shall be submitted to the exclusive jurisdiction of the courts of Dubai, UAE.</p>
+            <p>Nothing in this clause prevents Dxbians from seeking urgent injunctive or other equitable relief from any court of competent jurisdiction.</p>
+        </div>
+    </div>
+
+    <div id="s16" class="tc-section">
+        <div class="tc-section-num">16</div>
+        <div class="tc-section-title">Changes to These Terms</div>
+        <div class="tc-body">
+            <p>Dxbians reserves the right to update or modify these Terms at any time. When changes are made, we will update the "Last Updated" date at the top of this page and, where the changes are material, notify users via the Platform or via email where an address has been provided.</p>
+            <p>Your continued use of the Platform after any changes to these Terms constitutes your acceptance of the revised Terms. If you do not agree to the revised Terms, you must stop using the Platform.</p>
+        </div>
+    </div>
+
+    <div id="s17" class="tc-section">
+        <div class="tc-section-num">17</div>
+        <div class="tc-section-title">Contact</div>
+        <div class="tc-body">
+            <p>For any questions, complaints, or legal notices regarding these Terms, please contact:</p>
+            <div class="tc-highlight" style="border-left-color:#333;">
+                <strong style="color:#888;">Harib Alshihi for Innovation & AI Research & Consultancies</strong><br>
+                Dubai, United Arab Emirates<br>
+                Trade License No: 1366538<br><br>
+                WhatsApp: <a href="https://wa.me/971529973222">+971 52 997 3222</a><br>
+                Instagram: <a href="https://instagram.com/dxbians" target="_blank">@dxbians</a><br>
+                Telegram: <a href="https://t.me/dxbians" target="_blank">t.me/dxbians</a><br>
+                Website: <a href="https://dxbians.com/contact">dxbians.com/contact</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div style="display:flex;gap:20px;flex-wrap:wrap;">
+            <a href="https://dxbians.com/termsandconditions" class="footer-link" style="color:rgba(255,255,255,0.6);">Terms & Conditions</a>
+            <a href="https://dxbians.com/contact" class="footer-link">Contact</a>
+        </div>
+        <a href="https://dxbians.com" class="logo-frame" style="padding:5px 12px;"><span class="logo-text" style="font-size:12px;">Dxbians</span></a>
+        <div style="display:flex;gap:16px;">
+            <a href="https://instagram.com/dxbians" target="_blank" class="footer-link">Instagram</a>
+            <a href="https://youtube.com/@dxbians" target="_blank" class="footer-link">YouTube</a>
+            <a href="https://t.me/dxbians" target="_blank" class="footer-link">Telegram</a>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
